@@ -1,0 +1,2 @@
+.obsidianworkspace.json
+.trash

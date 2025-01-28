@@ -1,0 +1,8 @@
+
+git init
+git add README.md
+git add -A
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:1183675887/obsidian-note.git
+git push -u origin main

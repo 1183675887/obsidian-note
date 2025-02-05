@@ -4,30 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "4b63d6c0d3585c90",
+        "id": "b55f81fb9c5785cf",
         "type": "tabs",
         "children": [
           {
-            "id": "fe712ab7f0b10ddd",
+            "id": "8acd50be118b264d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "001_git/002_git连接失败.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "002_git连接失败"
-            }
-          },
-          {
-            "id": "385f3a3369935387",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "001_git/001_git操作命令.md",
+                "file": "101_git/001_git操作命令.md",
                 "mode": "source",
                 "source": false
               },
@@ -35,8 +21,7 @@
               "title": "001_git操作命令"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -67,7 +52,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "path:\"未命名/\" ",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -186,22 +171,45 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "385f3a3369935387",
+  "active": "8acd50be118b264d",
   "lastOpenFiles": [
-    "001_git/002_git连接失败.md",
-    "JavaWeb/JavaWeb.md",
-    "java核心技术/java核心技术第12章.md",
-    "java核心技术/java核心技术第6章.md",
-    "java核心技术/java核心技术第3章.md",
-    "java核心技术/java核心技术第5章.md",
-    "IO流/IO流教程笔记/IO流详解.md",
-    "002_github/001_github如何当图床.md",
-    "001_git/001_git操作命令.md",
-    "前端笔记/ajax.md",
-    "002_github",
-    "git操作/未111.md",
-    "001_git",
-    "未命名/未命名 1.md",
+    "101_git/000_git简介.md",
+    "101_git/002_git连接失败.md",
+    "103_mybatis/插入更新语句.md",
+    "103_mybatis/mybatis笔记.md",
+    "001_网络教程/IO流/IO流教程笔记/IO流详解.md",
+    "001_网络教程/003_JavaWeb/JavaWeb.md",
+    "103_mybatis",
+    "001_网络教程/000_JDBC/JBDC教程笔记/JDBC使用详解.md",
+    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第一章 微服务介绍.md",
+    "104",
+    "001_网络教程/000_JDBC",
+    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第八章 Zuul服务网关.md",
+    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第二章 Eureka注册中心.md",
+    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第五章 Hystrix熔断器.md",
+    "001_网络教程",
+    "101_git/001_git操作命令.md",
+    "000_书籍/105_Spring实战4/ssm整合文档.md",
+    "000_书籍/101_java核心技术/012_java核心技术第12章.md",
+    "000_书籍/101_java核心技术/003_java核心技术第3章.md",
+    "000_书籍/101_java核心技术/004_java核心技术第4章.md",
+    "000_书籍/102_MYSQL必知必会/001_MySQL必知必会1-3章.md",
+    "000_书籍/102_MYSQL必知必会/009_MySQL必知必会4-9章.md",
+    "000_书籍/102_MYSQL必知必会/014_MySQL必知必会10-14章.md",
+    "000_书籍/102_MYSQL必知必会/020_MySQL必知必会15-20章.md",
+    "000_书籍/102_MYSQL必知必会/026_MySQL必知必会21-26章.md",
+    "000_书籍/101_java核心技术/005_java核心技术第5章.md",
+    "000_书籍/101_java核心技术/006_java核心技术第6章.md",
+    "000_书籍/101_java核心技术/099_代码相关",
+    "501_前端笔记/JS.md",
+    "501_前端笔记/HTML和CSS.md",
+    "501_前端笔记/Vue/img/Vue03.png",
+    "501_前端笔记/Vue/img/Vue02.png",
+    "501_前端笔记/Vue/img/Vue01.png",
+    "501_前端笔记/ajax.md",
+    "000_书籍",
+    "102_github",
+    "101_git",
     "git操作"
   ]
 }

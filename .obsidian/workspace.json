@@ -173,7 +173,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -188,10 +188,17 @@
   },
   "active": "385f3a3369935387",
   "lastOpenFiles": [
-    "002_github/001_github如何当图床.md",
     "001_git/002_git连接失败.md",
-    "002_github",
+    "JavaWeb/JavaWeb.md",
+    "java核心技术/java核心技术第12章.md",
+    "java核心技术/java核心技术第6章.md",
+    "java核心技术/java核心技术第3章.md",
+    "java核心技术/java核心技术第5章.md",
+    "IO流/IO流教程笔记/IO流详解.md",
+    "002_github/001_github如何当图床.md",
     "001_git/001_git操作命令.md",
+    "前端笔记/ajax.md",
+    "002_github",
     "git操作/未111.md",
     "001_git",
     "未命名/未命名 1.md",

@@ -1,0 +1,707 @@
+---
+title: java核心技术第3章
+date: 2020-05-15 10:00:25
+tags: java
+---
+
+这章讲解数据类型，变量和常量，运算符，字符串，输入输出，控制流程，数组。
+
+<!--more-->
+
+## 第三章，java的基本程序设计结构
+
+### 3.1.一个简单的java程序
+
+下面看一个最简单的java应用程序。
+
+```java
+public class FirstSample
+{
+    public static void main(String[] args){
+        System.out.println("----");
+    }
+}
+```
+
+首先，java区分大小写。如果出现了大小写拼写错误，程序将无法运行。
+
+关键字public被称为访问修饰符。关键字class表明java程序中的全部内容都包含在类中。关键字class后面紧跟类名。
+
+java定义类名的规则很宽松。名字必须以字母开头，后面可以跟字母和数字的任意组合，标准的命名规范为：类名是以大写字母开头的名词。如果名词由多个单词组成，每个单词的第一个字母都应该大写。
+
+源文件的文件名必须与公共类的名字相同，并用.java作为扩展名。
+
+根据java语言规范，main方法必须声明为public。
+
+在java中，用大括号划分程序的各个部分(块)。java中任何方法的代码都用"{" 开始  ”}" 结束。
+
+在java中，每个句子必须用分号结束。
+
+点号(.)用于调用方法。
+
+采用双引号界定字符串。
+
+### 3.2.注释
+
+在java中，有3种标记注释的方法。最常用的方法是//。第二种是/* 和 */ 注释界定。第三种用于文档。以/** 开始，*/ 结束。
+
+### 3.3.数据类型
+
+在java中，一共有8种基本类型，其他有4种整型，2种浮点类型，1种字符类型char，和一种用于表示真值的boolean类型。
+
+#### 3.1.1.整型
+
+整型用于表示没有小数部分的数值，允许是负数。java提供了4种整型。
+
+| 类型  | 存储要求 | 取值范围                                          |
+| ----- | -------- | ------------------------------------------------- |
+| int   | 4字节    | -2147483648-----------2147483647(刚刚超过20亿)    |
+| short | 2字节    | -32768------32767                                 |
+| long  | 8字节    | -92233720368547758088---------9223372036854775807 |
+| byte  | 1字节    | -128-------127                                    |
+
+长整型数值有一个后缀L或l。十六进制数值有一个前缀0x或0X。八进制有一个前缀0。从java7开始，加上前缀0b或0B就可以写二进制。
+
+#### 3.3.2.浮点类型
+
+浮点类型用于表示有小数部分的数值。在java中有两种浮点类型。
+
+
+
+| 类型   | 存储要求 | 取值范围                                         |
+| ------ | -------- | ------------------------------------------------ |
+| float  | 4字节    | 大约正负3.40282347E+38F(有效位数为6--7位)        |
+| double | 8字节    | 大约正负1.79769313486231570E+308(有效位数为15位) |
+
+double表示这种类型的数值精度是float的两倍(也被称为双精度数值)。只有很少的情况适合使用float类型。
+
+float类型的数值有一个后缀F或f。
+
+#### 3.3.3.char类型
+
+char类型原本用于单个字符。char类型的字面量值要用单引号括起来。下面列举了常用的转义字符。
+
+| 转义序列 | 名称   | Unicode值 |
+| -------- | ------ | --------- |
+| \b       | 退格   | \u0008    |
+| \t       | 制表   | \u0009    |
+| \n       | 换行   | \u000a    |
+| \r       | 回车   | \u000d    |
+| \"       | 双引号 | \u0022    |
+| \'       | 单引号 | \u0027    |
+| \\       | 反斜杠 | \u005c    |
+
+建议不要在程序中使用char类型。最好将字符串作为酬谢数据类型处理。
+
+### 3.4.变量与常量
+
+#### 3.4.1.声明变量
+
+在java中，每个变量都有一个类型。在声明变量时，先指定变量的类型，然后是变量名。这里列举一些常用变量的示例。
+
+| double    salary;      |
+| ---------------------- |
+| int  vacationDays;     |
+| long  earthPopulation; |
+| boolean  done;         |
+
+每个声明都以分号结束。由于声明是一条完整的java语句，而所有的java语句都以分号结束，所以这里的分号是必需的。
+
+变量名必须是一个以字母开头并由字母或数字构成的序列。不能使用java保留字作为变量名。变量名的长度基本上没有限制。
+
+#### 3.4.2.变量初始化
+
+声明一个变量后，必须用赋值语句对变量进行显式初始化。在java中，变量的声明尽可能地靠近第一次使用的地方，这是一种良好的程序编写风格。
+
+#### 3.4.3.常量
+
+在java中，利用关键字final指示常量。例如：
+
+```java
+final double CM = 2.54;
+```
+
+关键字final表示这个变量只被赋值一次。一旦被赋值之后，就不能再更改了。习惯上，常量名使用全大写。
+
+在java中，经常希望某个常量可以在一个类的多个方法中使用，通常将这些常量称为类常量。可以使用关键字static final设置一个类常量。下面是例子。
+
+```java
+public static final double CM = 2.54; 
+```
+
+需要注意，类常量的定义位于main方法的外部。而且如果一个常量被声明为public，那么其他类的方法也可以使用这个常量。
+
+#### 3.4.4.枚举(enum)类型
+
+有时候，变量的取值只在一个有限的集合内。
+
+针对这种情况，可以自定义枚举类型。枚举类型包括有限个命名的值。例如：
+
+```java
+enum Size {SMALL,MEDIUM,LAGRE}
+
+Size s = Size.MEDIUM;
+```
+
+### 3.5.运算符
+
+#### 3.5.1.算术运算符
+
+在java中，使用+，-，*，/，表示加，减，乘，除运算。当运算的两个操作数都是整数时，表示整数除法；否则，表示浮点除法。整数的求余操作用%表示。需要注意，整数倍0除将会产生一个异常，而浮点数被0除将会得到无穷大或NaN结果。
+
+#### 3.5.2.数学函数与常量
+
+在Math类中，包含各种的数学函数，下面介绍常用的。
+
+计算一个数值的平方根，用sprt方法。
+
+```java
+double x = 4;
+double y = Math.sqrt(x);
+System.out.println(y);
+```
+
+在java中，没有幂运算，因此需要借助于Math类的pow方法。
+
+```java
+double y = Math.pow(x,a);   //将y的值设置为x的a次幂
+```
+
+提示：不必在数学方法名和常量名前添加前缀Math。只需要在源文件的顶部加上import static java.lang.Math.*;。
+
+#### 3.5.3.数值之间的转换
+
+当用一个二元运算符连接2个值值(如n+f)。转换顺序为double>float>iong>int。
+
+#### 3.5.4.强制类型转换
+
+强制类型转换的语法是在圆括号中给出想要转换的目标类型，后面紧跟待转换的变量名。
+
+```java
+double x = 9.997;
+int nx = (int) x;    //值为9
+```
+
+如果想对浮点数进行取舍运算，那就需要使用Math.round方法。
+
+```java
+double x = 9.997;
+int nx = (int)Math.round(x);      //值为10，小数点后是4舍5入
+```
+
+#### 35.5.5.结合赋值运算符
+
+可以在赋值中使用二元运算法。
+
+```java
+x += 4;
+```
+
+#### 3.5.6.自增和自减运算符
+
+```
+n++;   //先使用原来值，再增加。
+++n;   //先完成加1操作。
+```
+
+#### 3.5.7.关系和boolean运算符
+
+要检测相等性，可以使用两个等号。
+
+```java
+3 == 7;
+```
+
+java支持三元操作符?: 。如果条件为true，就为第一个表达式的值，否则为第二个表达式的值。
+
+```java
+x < y ? x:y
+```
+
+### 3.6.字符串
+
+从概念上来讲，java字符串就是Unicode字符序列。java没有内置的字符串类型，而是在标准java类库中提供了一个预定义类，很自然的叫作String。每个用双引号括起来的字符串都是String类的一个实例。
+
+```java
+String e = " ";
+```
+
+#### 3.6.1.子串
+
+String类的substring方法可以从一个较大的字符串中提取出一个子串。
+
+```java
+String greeting = "hello";
+String s = greeting.substring(0,3);    //创建一个由字符"hel"组成的字符串。
+```
+
+substring的工作方式有一个优点：容易计算子串的长度。3-0即为上述例子的长度。
+
+#### 3.6.2.拼接
+
+java语言允许用+号拼接两个字符串。
+
+```java
+String expletive = "Expletive";
+String PG13 = "deleted";
+String message = expletive + PG13;
+```
+
+当将一个字符串与一个非字符串的值进行拼接时，后者会转换成字符串。
+
+```java
+int age = 13;
+String rating = "PG" + age;   //将rating设置为"PG13"
+```
+
+#### 3.6.3.不可变字符串
+
+String类没有提供修改字符串中某个字符的方法,底层用final修饰，因此是不可变的。
+
+#### 3.6.4.检测字符串是否相等
+
+可以使用equals方法检测两个字符串是否相等。
+
+```java
+s.equals(t)   //如果字符串s与字符串t相等，返回true，否则，返回false。
+```
+
+需要注意的是，s与t可以是字符串变量，也可以是字符串字面量。
+
+```
+"hello".equals(greting)           
+```
+
+如果想检测两个字符串是否相等，而不区分大小写，可以使用equalsIgnoreCase方法。
+
+```java
+"hello".equalsIgnoreCase("hello")
+```
+
+一定不要用==运算符检测两个字符串是否相等。这个运算符只能确定两个字符串是否放在同一位置。
+
+#### 3.6.5.空串与Null串
+
+空串""是长度为0的字符串。可以调用以下代码检查一个字符串是否为空。
+
+```java
+if(str.length() == 0)
+或者
+if(str.equals(""))
+```
+
+空串是一个java对象，有自己的串长度(0)和内容(空)。
+
+Sring变量还可以存放一个特殊的值，名为null，表示目前没有任何对象与该变量关联。要检查一个字符串是否为null，使用以下条件。
+
+```java
+if(str == null)
+```
+
+#### 3.6.8.阅读联结API文档
+
+String包含许多方法，可以从Oracle下载API文档，并保存着本地查看。
+
+#### 3.6.9.构建字符串
+
+有些时候，需要由较短的字符串构建字符串。使用StringBuilder类。按如下步骤进行。
+
+首先，构建一个空的字符串构建器。
+
+```java
+StringBuilder builder = new StringBuilder();
+```
+
+当每次需要添加一部分内容时，就调用append方法。
+
+```java
+builder.append(ch);
+builder.append(str);
+```
+
+在字符串构建完成时就调用toString方法，将可以得到一个String对象，其中包含了构建器中的字符序列。
+
+```java
+String completedString = builder.toString();
+```
+
+注释：StringBuilder类是在java5中引入。这个类的前身是StringBuffer,它的效率稍有些低，但允许采用多线程的方法添加或删除字符。如果所有字符串编辑操作都在单个线程中执行(通常都是这样)，则应该使用StringBuilder。
+
+### 3.7.输入与输出
+
+读取“标准输入流”System.in没那么简单，首先需要构造一个与"标准输入流"System.in关联的Scanner对象。
+
+```
+Scanner in = new Scanner(System.in);
+```
+
+现在，就可以使用Scanner类的各种方法读取输入了。例如，nextLine方法将读取一行输入。
+
+```java
+System.out.print("What is your name? ");
+String name = in.nextLine();   //Line是因为在输入行照片那个可能包含空格。
+String name = in.next();        //读取一个单词
+String name = in.nextInt();     //读取一个整数
+String name = in.nextDouble();   //读取下一个浮点数
+```
+
+最后，在程序的最前面添加一行代码。
+
+```java
+import java.util.*;
+```
+
+Scanner类定义在java.util包中。当使用的类不是定义在基本java.lang包中时，一定要使用import导入相应的包。
+
+```java
+import java.util.*;
+
+public class InputTest 
+{
+   public static void main(String[] args) {
+	Scanner in = new Scanner(System.in);
+
+	System.out.println("what is your name?");
+	String name = in.nextLine();
+
+	System.out.println("how old are your?");
+	int age = in.nextInt();
+
+	System.out.println("hello,"+ name + ". Next year,you'will be " + (age + 1));
+}				
+}
+```
+
+#### 3.7.2.格式化输出
+
+可以使用语句System.out.print(x)将数值x输入到控制台。
+
+```java
+double x = 10000.0/3.0;
+System.out.print(x);    //输入3333.333333
+```
+
+关于格式化数值，java5沿用了C语言函数库中的printf方法。
+
+```java
+System.out.printf("%8.2f", x);    //会以字段宽度打印x。包括8个字符，精度为小数点后2个字符。
+```
+
+可以为printf提供多个参数。
+
+```java
+Syetem.out.printf("Hello, %s. Next year,you'll be %d", name, age);
+```
+
+每一个以%字符开始的格式说明符都用相应的参数替换。格式说明符尾部的转换符指示要格式化的数值的类型。
+
+| 转换符 | 类型                         | 示例       |
+| ------ | ---------------------------- | ---------- |
+| d      | 十进制整数                   | 159        |
+| x      | 十六进制整数                 | 9f         |
+| o      | 八进制整数                   | 237        |
+| f      | 定点浮点数                   | 15.9       |
+| e      | 指数浮点数                   | 1.59e+01   |
+| g      | 通用浮点数(e和f中较短的一个) | —          |
+| a      | 十六进制浮点数               | 0x1.fccdp3 |
+| s      | 字符串                       | hello      |
+| c      | 字符                         | H          |
+| b      | 布尔                         | true       |
+| h      | 散列表                       | 42628b2    |
+| tx或Tx | 日期时间(T强制大写)          | 已经过时   |
+| %      | 百分号                       | %          |
+| n      | 与平台有关的行分隔符         | —          |
+
+#### 3.7.3.文件输入与输出
+
+想要读取一个文件，需要构造一个Scanner对象。
+
+```java
+Scanner in = new Scanner(Path.of("myfile.txt"), StandardCharsets.UTF_8);
+```
+
+如果文件名中包含反斜杠符合，就要记住在每个反斜杠之前再加一个额外的反斜杠转义。
+
+```java
+"c:\\mydirectory\\myfile.tet"
+```
+
+现在，就可以利用前面的任何一个Scanner方法对文件进行读取。
+
+要想写入文件，就需要构造一个PrintWriter对象。在构造器中，需要提供文件名和字符编码。
+
+```java
+PrintWriter out = new PrintWriter("myfile.txt, StandardCharsets.UTF_8");
+```
+
+如果文件不存在，创建该文件。
+
+### 3.8.控制流程
+
+#### 3.8.1.块作用域
+
+块是由若干个java语句组成的语句，并用一对大括号括起来、块确定了变量的作用域。一个块可以嵌套在另一个块中。
+
+```java
+public static void main(String[] args){
+    int n;
+    ------
+    {
+        int k;
+        -----
+    }
+}
+```
+
+但是，不能在嵌套的两个块中声明同名的变量。
+
+#### 3.8.2.条件语句
+
+```java
+if(条件---){
+
+}    
+```
+
+#### 3.8.3.循环
+
+```java
+while(条件--){
+
+}    
+```
+
+```java
+do{
+    
+}
+while(条件--)
+```
+
+#### 3.8.4.确定循环
+
+```java
+for(---;---;---){
+    
+}
+```
+
+#### 3.8.5.多重选择：Switch语句
+
+```java
+switch(---)
+{
+    case 0:------  
+    break;
+    case 1:------
+    break;
+    -------    
+}
+```
+
+case标签可以是：类型为char,byte,short或int的常量表达式。从java7开始，还可以是字符串字面量。
+
+#### 3.8.6.中断控制流程的语句
+
+break跳出此层循环。continue跳过此次循环。
+
+### 3.10.数组
+
+数组存储相同类型值的序列。
+
+#### 3.10.1.声明数组
+
+数组是一种数据结构，用来存储同一类型的集合。通过一个正向下标(index,或称索引)可以访问数组中的每一个值。例如，a是一个整型数组，a[i]就是数组中下标为i的整数。
+
+在声明数组变量时，需要指出数组类型(数据元素类型紧跟[])和数组变量的名字。下面声明了整型数组a。
+
+```java
+int[] a;
+```
+
+使用new操作符创建数组。
+
+```java
+int[] a = new int[100];    //声明并初始化了一个可用存储100个整数的数组。
+```
+
+数组长度不要求是常量。new int[n]会创建一个长度为n的数组。
+
+一旦创建了数组，就不能再改变它的长度(不过，可用改变单个的数组元素)。
+
+在java中，提供了一种创建数组对象并同时提供初始值的简写形式。
+
+```java
+int[] smallprimes = {2,3,5,7,11,13};
+```
+
+```java
+String[] authors = {
+    "james Gosling",
+    "Bill Joy",
+    "Guy Steele",
+};
+```
+
+还可以声明一个匿名数组。
+
+```java
+new int[] {17,19,23,29,31,37}
+```
+
+这会分配一个新数组并填入大括号提供的值。它会统计初始值个数，并相应地设置数组大小。可以使用这种语法重新初始胡一个数值而无需创建新变量。
+
+```java
+smallprimes = new int[] {17,19,23,29,31,37};
+```
+
+下面是简写模式。
+
+```java
+int[] anonymous = {17,19,23,29,31,37};
+smallprimes = anonymous;
+```
+
+#### 3.10.2.访问数组元素
+
+前面的数组元素的下标为0-99.一旦创建了数组，就可以在数组中填入元素。例如，使用一个循环。
+
+```java
+int[] a = new int[100];
+for(int i = 0;i < 100; i++){
+    a[i] = i;
+}
+```
+
+创建一个数字数组时，所有元素都初始化为0。boolean数组的元素初始化为false。对象数组的元素初始化为一个特殊值null。
+
+想要获得数组中的元素个数，可以使用array.length。
+
+```java
+for(int i = 0; i < a.length; i++)
+```
+
+#### 3.10.3.for each循环
+
+java中有一种很强的循环结构，可以用来依次处理数组(或者其他元素集合)中的每个元素，而不必考虑指定下标值。
+
+```java
+for(int element : a)
+    System.out.println(element)  //打印数组a的每一个元素，一个元素占一行
+```
+
+#### 3.10.4.数组拷贝
+
+在java中，允许一个数组变量拷贝到另一个数组变量。这时，两个变量将引用同一个数组。
+
+```java
+int[] luckNumbers = smallPrimes;
+luckNumbers[5] = 12;         //此时smallPrimes[5]也是12.
+```
+
+如果希望将一个数组的所有值拷贝到一个新的数组中去，就要使用Arrats类的copyOF方法。
+
+```java
+int[] copiedLuckNumbers = Arrays.copyOf(luckyNumbers, luckyNumbers.length); //第二个参数是数组长度
+```
+
+#### 3.10.5.命令行参数
+
+每一个java应用程序都有一带String arg[] 参数的main方法。这个参数表名main方法将接受一个字符串数组。
+
+#### 3.10.6.数组排序
+
+想要对数值型数组进行排序，可以使用Arrays类中的sort方法。
+
+```java
+int[] a = new int[100];
+-----
+Arrays.sort(a);
+```
+
+```java
+import java.util.*;
+public class LotteryDrawing
+{
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("你需要抽多少个数字?");
+		int k = in.nextInt();
+		
+		System.out.println("你能抽到的最大数字是多少?");
+		int n = in.nextInt();
+		
+		int[] numbers = new int[n];
+		for(int i = 0;i < numbers.length;i++) {
+			numbers[i] = i+1;
+		}
+		
+		int[] result = new int[k];
+		for(int i = 0;i < result.length; i++) {
+			int r = (int) (Math.random() * n);
+			result[i] = numbers[r];
+			numbers[r] = numbers[n - 1];
+			n--;
+		}
+
+		//排序
+		Arrays.sort(result);
+		System.out.println("赌下面的组合。会让你发财的!");
+		for(int r : result)
+			System.out.println(r);
+	}
+	
+}
+
+```
+
+##### 3.10.7.多维数组
+
+多维数组就是一维数组的一维数组。
+
+```java
+
+public class Compoundlnterest{
+
+	public static void main(String[] args) {
+		final double STARTRATE = 10;
+		final int NRATES = 6;
+		final int NYEARS = 10;
+		
+		double[] interestRate = new double[NRATES];
+                                //第一行百分之十+
+		for(int j = 0; j < interestRate.length; j++) 
+			interestRate[j] = (STARTRATE + j) / 100;
+		
+		double[][] balances = new double[NYEARS][NRATES];
+                                //初始第一行为10000元
+		for(int j = 0; j < balances[0].length; j++) 
+			balances[0][j] = 10000;
+		
+		//从第一行【列】开始
+		for(int i = 1;i < balances.length; i++) 
+		{
+			for(int j = 0;j < balances[i].length; j++) 
+			{
+				double oldBalance = balances[i - 1][j];
+				
+				double interest = oldBalance * interestRate[j];
+				balances[i][j] = oldBalance + interest;
+			}
+		}
+			
+			for(int j = 0; j < interestRate.length; j++) 
+				System.out.printf("%9.0f%%", 100 * interestRate[j]);
+			System.out.println();
+			
+			for(double[] row : balances) {
+				for(double b : row)
+					System.out.printf("%10.2f", b);
+				System.out.println();
+			}
+}
+}
+```
+

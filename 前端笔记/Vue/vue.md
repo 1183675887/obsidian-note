@@ -1,0 +1,1062 @@
+---
+title: vue
+date: 2021-01-17 22:34:41
+tags: vue
+---
+
+# Vue
+
+<!--more-->
+
+Soc:  关注点分离原则
+
+HTML + CSS + JS:  视图：给用户看，刷新后台给的数据
+
+网络通信:  axios
+
+页面跳转:  vue-router
+
+状态管理：Vuex
+
+Vue-UI: ice.work(飞兵)  ElementUI(饿了么)，vue-element-admin
+
+## 一.Vue基础语法
+
+#### 1.1.v-前缀
+
+指令带有前缀v-，以表示它们是Vue提供的特殊属性，它们会在渲染的DOM上应用特殊的响应式行为。
+
+简单的vue小demo(过渡)
+
+```html
+<body>
+<div id="app">
+   {{message}}
+</div> 
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id=app的标签，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data:{                 //data就是数据
+           message: "hello,vue!"
+        }
+    });
+</script>
+</body>
+```
+
+#### 1.2.条件判断语句v-if  和 v-else-if 和 v-else
+
+```html
+<body>
+<div id="app">
+    <h1 v-if="type==='A'">A</h1>                   //相对于java的if
+    <h1 v-else-if="type==='B">B</h1>               //相对于java的else if    
+    <h1 v-else>C</h1>                              //相对于java的else
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+           type: 'A'            //表明type属性的值为'A'
+        }
+    });
+</script>
+</body>
+```
+
+#### 1.3.循环语句v-for
+
+```html
+<body>
+<div id="app">
+    <li v-for="item in items">                //相当于java中的for(var item : items)
+        {{item.message}}
+        {{item.age}}
+    </li>
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {                 //以下数据表示items数组中存放了两个对象
+           items: [                    //数组都用[]表示,items就是存放对象的总集
+               {message: '任支程'},     //对象都用{}表示
+               {age: 30}
+           ]
+        }
+    });
+</script>
+</body>
+```
+
+### 2.Vue绑定事件
+
+#### 2.1.v-on(简写@)监听DOM事件
+
+v-on后面跟着的就是jquery的所有事件。
+
+```html
+<body>
+<div id="app">
+<button v-on:click="sayHi">click Me</button>                //v-on后面跟的就是事件，这里是click点击事件
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+            message: "任支程"
+        },
+        methods: {                //方法必须定义在Vue的Method对象中
+           sayHi: function () {       //方法名为sayHi
+               alert(this.message);
+           }
+        }
+    });
+</script>
+</body>
+```
+
+### 3.v-model数据的双向绑定
+
+使用v-model指令在表单<input> ,<textarea>以及<select>元素上创建双向数据绑定，它会根据控件类型自动选取正确的方法来更新元素。在输入时的数据这样就会被vue所识别，vue中data中与v-model绑定的属性数据也会因此变化，这就是双向绑定。
+
+- 注意：v-model会忽略所有表单元素的value,checked,selected特性的初始值而总是将Vue实例的数据作为数据来源。应该通过JS在组件的data选项中声明初始值！
+
+#### 3.1.普通的输入框
+
+```html
+<body>
+<div id="app">
+输入的文本: <input type="text" v-model="message"> {{message}}  //输入时会绑定v-model中的属性，下面的数据也会跟着绑定
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+             message: "",
+        },
+    });
+</script>
+</body>
+```
+
+#### 3.2.单选框
+
+```html
+<body>
+<div id="app">
+    性别:
+    <input type="radio" name="sex" value="男" v-model="danxuan"> 男
+    <input type="radio" name="sex" value="女" v-model="danxuan"> 女
+    <p>
+        选中了谁: {{danxuan}}    //value影响了v-model中的属性，因此属性值是选中的value的值
+    </p>
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+             danxuan: '',
+        },
+    });
+</script>
+</body>
+```
+
+#### 3.3.下拉框
+
+```html
+<body>
+<div id="app">
+    下拉框:
+   <select v-model="xiala">           //option默认value为选择的。
+       <option value="" disabled>--请选择--</option>
+       <option>A</option>
+       <option>B</option>
+       <option>C</option>
+   </select>
+    <span>value:{{xiala}}</span>
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+             xiala: '',
+        },
+    });
+</script>
+</body>
+```
+
+### 4.Vue组件，v-bind(简写:)给组件绑定参数
+
+组件是可复用的Vue实例，说白了就是一组可以重复使用的**模板**，通常一个应用汇以一颗嵌套的组件树的形式来组织。
+
+[![syEBan.png](https://s3.ax1x.com/2021/01/17/syEBan.png)](https://imgchr.com/i/syEBan)
+
+```html
+<body>
+<div id="app">
+  <!-- 组件:传递给组件中的值: props属性接收值  v-bind的zhi绑定item的值 -->
+    <zujian v-for="item in items" v-bind:zhi="item"></zujian>
+</div>
+<script>
+    //定义一个Vue组件component，“”中的是组件名称
+    Vue.component("zujian",{
+        props: ['zhi'],                    //接收v-bind绑定过来的值
+         template: '<li>{{zhi}}</li>',     //组件模板
+    });
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+            items: ["java","Linux","前端"]
+        },
+    });
+</script>
+</body>
+```
+
+### 5.网络异步通信Axios(类似ajax)
+
+Axios是一个开源的可以用在浏览器和node.js的异步通信框架,她的主要作用就是实现AJAX异步通信，其功能特点如下:
+
+- 从浏览器中创建XMLHttpRequests
+- 从node.js创建http请求
+- 支持Promise API[JS中链式编程]
+- 拦截请求和响应
+- 转换请求数据和响应数据
+- 取消请求
+- 自动转换JSON数据
+- 客户端支持防御XSRF(跨域请求伪站)
+
+```html
+<body>
+<div id="app">
+    <div>{{info.name}}</div>
+    <div>{{info.address.country}}</div>
+    <a v-bind:href="info.url">点击链接</a>            //v-bindb:绑定一些特殊标签
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data() {                //这个data是方法
+            return {
+                info: {             //请求的返回参数格式,必须和json字符串一样
+                    name: null,
+                    address: {
+                        country: null,
+                        city: null,
+                        street: null
+                    },
+                    url: null
+                }
+            }
+        },
+        mounted() {                 //链式编程钩子函数,页面初始化时就会执行，一般是用axios进行初始化数据
+            axios.get('../data.json')
+                .then(response=>(this.info = response.data));
+        }
+
+    });
+</script>
+</body>
+```
+
+### 6.Vue计算属性
+
+计算属性就是将计算出来的结果保存在计算属性中，内存中运行：虚拟DOM。不刷新页面则是内存中缓存中的值，一般情况下用于计算结果值不会发生改变的方法。
+
+```html
+<body>
+<div id="app">
+<p>currentTime1: {{currentTime1()}}</p>               <!--正常调用方法需要()括号-->
+<p>currentTime2: {{currentTime2}}</p>                 <!--计算属性调用方法不需要括号-->
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+            message: "hello,shuxing"
+        },
+        methods:  {
+            currentTime1 :function () {
+                return Date.now();                //返回当前时间戳
+            }
+        },
+        computed:{        //计算属性,注意,methods中方法名和computed方法名不能重名.如果重名只会调用methods内的方法
+            currentTime2: function () {
+                 return Date.now();
+            }
+        }
+    });
+</script>
+</body>
+```
+
+### 7.插槽slot
+
+```html
+<body>
+<div id="app">
+     <chacao>
+         <chacao-title slot="chacao-title" :title="title"></chacao-title>
+         <chacao-items slot="chacao-items" v-for="item in chacaoitems" :item="item"></chacao-items>
+     </chacao>                                         <!--    <p>列表书籍</p>-->
+                                              <!--    <ul>-->
+                                              <!--        <li>java</li>-->
+                                              <!--        <li>Linux</li>-->
+                                              <!--        <li>Python</li>-->
+                                               <!--    </ul>-->
+</div>
+<script>
+    //<slot>就是插槽
+    Vue.component("chacao",{
+       template: '<div>\
+                    <slot name="chacao-title"></slot>\
+                      <ul>\
+                        <slot name="chacao-items"></slot>\
+                      </ul>\
+                  </div>'
+    });
+    Vue.component("chacao-title",{
+        props: ['title'],
+        template: '<div>{{title}}</div>'
+    })
+    Vue.component("chacao-items",{
+        props: ['item'],
+        template: '<li>{{item}}</li>'
+    })
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+            title: "列表",
+            chacaoitems: ['java','Linux','Python']
+        },
+    });
+</script>
+</body>
+```
+
+### 8.插槽自定义事件处理,this.$emit("事件名"，参数)；
+
+[![syEhZ9.png](https://s3.ax1x.com/2021/01/17/syEhZ9.png)](https://imgchr.com/i/syEhZ9)
+
+```html
+<body>
+<div id="app">
+     <chacao>
+         <chacao-title slot="chacao-title" :title="title"></chacao-title>
+         <chacao-items slot="chacao-items" v-for="(item,index) in chacaoitems"
+                       :index="index" :item="item" v-on:remove="removeItems(index)"></chacao-items>
+     </chacao>                                         <!--    <p>列表书籍</p>-->
+                                              <!--    <ul>-->
+                                              <!--        <li>java</li>-->
+                                              <!--        <li>Linux</li>-->
+                                              <!--        <li>Python</li>-->
+                                               <!--    </ul>-->
+</div>
+<script>
+    //<slot>就是插槽
+    Vue.component("chacao",{
+       template: '<div>\
+                    <slot name="chacao-title"></slot>\
+                      <ul>\
+                        <slot name="chacao-items"></slot>\
+                      </ul>\
+                  </div>'
+    });
+    Vue.component("chacao-title",{
+        props: ['title'],
+        template: '<div>{{title}}</div>'
+    })
+    Vue.component("chacao-items",{
+        props: ['item','index'],
+        //只能绑定当前组件的方法
+        template: '<li>{{index}}----{{item}}  <button @click="remove">删除</button></li> ',
+        methods: {
+            remove: function (index) {
+               //触发自定义事件
+                this.$emit('remove',index)
+            }
+        }
+    })
+    
+    var vm = new Vue({
+        el: "#app",             //元素绑定id为app的，一般都在父元素中绑定，这样下面的子元素都可以使用
+        data: {
+            title: "列表",
+            chacaoitems: ['java','Linux','Python']
+        },
+        methods: {
+            removeItems:function (index) {
+                console.log("删除了"+this.chacaoitems[index] + "OK")
+                this.chacaoitems.splice(index,1);           //一次删除一个元素
+            }
+        }
+    });
+</script>
+</body>
+```
+
+Vue的开发都是要基于Node.js，实际开发使用vue-cli脚手架开发,vue-router实现路由跳转，vuex做状态管理; Vue UI界面我们一般使用ElementUI(饿了么出品)，或者ICE(阿里巴巴出品!)来快速搭建前端项目。使用axios框架做异步通信。
+
+## 二.企业级开发技术
+
+### 1.vue-cli脚手架，快速生成一个vue的项目模板
+
+#### 1.1.需要的环境
+
+- Node.js。安装后再cmd下输入node -v,查看版本号。(电脑版本12.8.0.学习版本12.13.0)
+- 输入npm -v,查看版本号。npm就是软件包管理工具。(电脑版本6.10.2.学习版本6.12.0)
+- 安装Node.js淘宝镜像加速器(cnpm). npm install cnpm -g (-g就是全局安装)
+- Git
+- vue-cli。npm install -g @vue/cli@3.11.0(版本过高可能会有问题，所以安装特定版本)。如果之前安装了就要卸载
+- vue list。cnpm install -g @vue/cli-init
+
+#### 1.2.主要功能
+
+- 统一的目录结构
+- 本地调试
+- 热部署
+- 单元测试
+- 集成打包上线
+
+#### 1.3.使用webpack模板创建vue项目
+
+```yaml
+##以下都在cmd命令下创建，其中第一步需要在想安装的位置运行
+#这里的myvue是项目名称
+vue init webpack myvue
+##进入创建的项目
+cd myvue
+##安装需要的环境
+npm install
+##运行vue项目
+npm run dev
+##停止项目
+Ctrl+c
+```
+
+```
+Project name  //项目名称
+Project description  //项目描述
+Autjor             //项目作者
+Vue build           
+```
+
+之后用IDEA打开即可，可以在下方的Terminal的使用下面的命令
+
+### 2.WebPack
+
+webPack是一个模块加载器兼打包器工具，它能把各种资源,如JS,JSX,ES6,SASS,LESS,图片等作为模块来处理和使用。
+
+#### 2.1.安装
+
+- npm install webpack@4.41.2 -g。 webpack -v查看版本
+- npm install webpack-cli -g  。        webpack-cli -v
+
+#### 2.2.配置
+
+创建webpack.config.js配置文件
+
+- entry:   入口文件,指定WebPack用哪个文件作为项目的入口
+- output: 输出,指定WebPack把处理完成的文件放置到指定路径
+- module: 模块,用于处理各种类型的文件
+- plugins: 插件: 如:热更新,代码重用等
+- resolve: 设置路径指向
+- watch: 监听, 用于设置文件改动后直接打包
+
+#### 2.3.使用WebPack
+
+##### 2.3.1.创建项目
+
+##### 2.3.2.创建一个名为modules的目录,用于放置JS模块等资源文件
+
+##### 2.3.3.在modules的目录下创建模块文件，如hello.js,用于编写JS模块相关代码
+
+```js
+//暴露一个方法
+exports.sayHi = function () {
+    document.write("<h1>ES6规范</h1>")
+};
+```
+
+##### 2.3.4.在modules下创建一个名为main.js的入口文件,用于打包时设置entry属性
+
+```js
+var hello = require("./hello");             //调用hello.js中的方法
+hello.sayHi();                              
+```
+
+##### 2.3.5.在项目目录下创建webpack.config.js的配置文件
+
+```js
+module.exports = {
+   entry: './modules/main.js',         //对main.js进行打包
+    output: {                          //打包
+       filename: "./js/bundle.js"      //位置
+    }
+};
+```
+
+之后再Terminal中输入webpack进行打包。
+
+##### 2.3.6.再项目目录下创建index.html进行测试
+
+```html
+<body>
+    <!--前端的模块化开发-->
+<script src="dist/js/bundle.js"></script>
+</body>
+```
+
+### 3.vue-router路由
+
+功能：
+
+- 嵌套的路由/视图表
+- 模块化的，基于组件的路由配置
+- 路由参数，查询，通配符
+- 基于Vue.js过渡系统的视图过渡效果
+- 细粒度的导航控制
+- 带有自动激活的CSS class的链接
+- HTML 5历史模式或hash模块,在IE9中自动降级
+- 自定义的滚动条
+
+#### 3.1.安装
+
+> 基于第一个vue-cli进行测试学习;先查看node_modules中是否存在vue-router.
+
+1.进入项目目录，打开cmd,输入命令 npm install vue-router --save-dev
+
+2.进入main.js文件，导入以及显示声明使用它(这步只是显示如何操作，并不直接引用，后面会说明)
+
+```js
+//导入VueRouter
+import VueRouter from 'vue-router'
+//显示声明使用它
+Vue.use(VueRouter);
+```
+
+#### 3.2.创建组件
+
+在components的目录下创建一个Content.vue。在App.vue中引入。
+
+在component的目录下创建一个main.vue。在App.vue引入。
+
+```html
+<script>
+import Content from "./components/Content";
+import Main from "./components/Main";
+
+export default {
+  name: 'App',
+  comments:{
+     Content,
+      Main
+  }
+}
+</script>
+```
+
+#### 3.3.创建router
+
+在项目目录下创建一个router目录，之后在此目录下创建index.js。
+
+```js
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Content from "../components/Content";
+import Main from "../components/main"
+
+//安装路由
+Vue.use(VueRouter);
+
+//配置导出路由
+export default new VueRouter({
+  routes: [
+    {
+         //路由路径 相当于@RequestMapping
+         path: '/content',
+      name: 'content',
+        //跳转的组件
+        component: Content
+    },
+    {
+      //路由路径
+      path: '/main',
+      name: 'content',
+      //跳转的组件
+      component: Main
+    }
+  ]
+});
+```
+
+#### 3.4.引入router
+
+在main.js中引入，这就是router的真正引用
+
+```js
+import router from './router'          //目录下为index的会自动扫描
+
+new Vue({
+  el: '#app',
+  //配置路由
+  router,
+  components: { App },
+  template: '<App/>'
+})
+```
+
+#### 3.5.使用router
+
+在App.vue中使用router,运用<routet-link>标签
+
+```js
+<template>
+  <div id="app">
+ //路由链接
+<router-link to="/main">首页</router-link>
+<router-link to="content">内容页</router-link>
+  //
+  </div>
+</template>
+```
+
+总结：App.vue中<router-link>被点击，就会找到main.js。main.js配置的router会找到router目录下的index.js。会在路由路径中找到/xxx，之后根据路由跳转到设定的Vue组件中。进而展示这个组件页面内容。
+
+因此：创建一个组件，需要在router目录下的index.js中编写，因为main.js配置是死的，所以不需要再更改。之后再App.vue使用即可。
+
+### 4.Vue+ElementUI
+
+#### 4.1.创建工程
+
+```yaml
+##以下都在cmd命令下创建，其中第一步需要在想安装的位置运行
+#这里的myvue是项目名称
+vue init webpack hello-vue
+##进入创建的项目
+cd hello-vue
+##安装vue-router
+npm install vue-router --save-dev
+##安装element-ui
+npm i element-ui -S
+##安装需要的环境
+npm install
+##安装SASS加载器，因为sass-loader依赖于node-sass，所以还要安装node-sass
+npm install sass-loader node-sass  --save-dev 
+##运行vue项目
+npm run dev
+##停止项目
+Ctrl+c
+```
+
+#### 4.2.Npm命令解释
+
+- npm  install  moduleName:  安装模块到项目目录下
+- npm  install  -g  moduleName:  -g的意思是将模块安装到全局，具体安装到磁盘哪个位置，要看npm config prefix的位置。
+- npm  install  -save  moduleName:  --save的意思是将模块安装到项目目录下，并在package文件的 dependencies 节点写入依赖，-S为该命令的缩写。
+- npm  install  -save-dev  moduleName:  --save-dev的意思是将该模块安装到项目目录下,并在package文件的devDependencies节点写入依赖,-D为该命令的缩写。
+
+#### 4.3.创建页面
+
+1.在src目录下创建router目录和views目录。view目录下创建Main.vue和Login.vue。
+
+```html
+<template>
+<h1>首页</h1>
+</template>
+<script>
+    export default {
+        name: "Main"
+    }
+</script>
+<style scoped>
+</style>
+```
+
+```html
+<template>
+  <div>
+    <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
+      <h3 class="login-title">欢迎登录</h3>
+      <el-form-item label="账号" prop="username">
+        <el-input type="text" placeholder="请输入账号" v-model="form.username"/>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" v-on:click="onSubmit('loginForm')">登录</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-dialog
+      title="温馨提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>请输入账号和密码</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+
+<script>
+  export  default {
+    name: "Login",
+    data(){
+      return {
+        form:{
+          username: '',
+          password: ''
+        },
+        //表单验证，需要再el-form-item 元素中增加prop属性
+        rules:{
+          username:[
+            {required: true,
+                message: '账号不能为空',
+                trigger: 'blur'
+            }
+          ],
+          password:[
+            {required: true,
+                message: '密码不能为空',
+                trigger: 'blur'}
+          ]
+        },
+        //对话框显示和隐藏
+        dialogVisible:false
+      }
+    },
+    methods:{
+      onSubmit(formName) {
+        //为表单绑定验证功能
+        this.$refs[formName].validate((valid) =>{
+          if (valid){
+            //使用 vue-router路由到指定页面，该方式称之为编程式导航
+            this.$router.push("/main");
+          } else {
+            this.dialogVisible = true;
+            return false;
+          }
+        });
+      }
+    }
+  }
+</script>
+
+
+<style lang="scss" scoped>
+  .login-box{
+    border: 1px solid #DCDFE6;
+    width: 350px;
+    margin:180px auto;
+    padding:35px 35px 15px 35px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    box-shadow:0 0 25px #909399;
+  }
+
+  .login-title{
+    text-align:center;
+    margin:0 auto 40px auto;
+    color:#303133;
+  }
+</style>
+```
+
+2.在router目录下创建index.js。
+
+```js
+import Vue from 'vue'
+import Router from 'vue-router'
+
+import Main from '../views/Main'
+import Login from '../views/Login'
+
+Vue.use(Router);
+
+export default new Router({
+routes: [
+  {
+    path: '/main',
+    component: Main
+  },
+  {
+    path: '/login',
+    component: Login
+  }
+]
+});
+```
+
+3.在main.js中导入router和ElementUI。
+
+```js
+import Vue from 'vue'
+import App from './App'
+
+import router from './router'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI);
+Vue.use(router);
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)   //ElementUI
+});
+```
+
+4.在App.vue中引用
+
+```html
+<template>
+  <div id="app">
+    <router-link to="/main">mian页面</router-link>
+    <router-link to="/login">login页面</router-link>
+<router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
+```
+
+### 5.路由嵌套
+
+嵌套路由在实际应用中是由多层嵌套的组件组合而成。同样的，URL各段路径也按某种结构对应嵌套的各层组件。
+
+[![syukUH.png](https://s3.ax1x.com/2021/01/17/syukUH.png)](https://imgchr.com/i/syukUH)
+
+#### 5.1.创建目录，按着上一个项目编写
+
+##### 5.1.1.在views下创建user目录,在此目录下创建Profile.vue和List.vue。
+
+```html
+<template>
+  <h1>个人信息</h1>
+</template>
+
+<script>			
+    export default {
+        name: "UserProfile"
+    }
+</script>
+
+<style scoped>
+
+</style>
+```
+
+```html
+<template>
+<h1>用户列表</h1>
+</template>
+
+<script>
+    export default {
+        name: "UserList"
+    }
+</script>
+
+<style scoped>
+
+</style>
+```
+
+##### 5.1.2.更改Main.vue。
+
+```html
+<template>
+<div>
+  <el-container>
+    <el-aside width="200px">
+      <el-menu :default-openeds="['1']">
+        <el-submenu index="1">
+          <template slot="title"><i class="el-icon-caret-right"></i>用户管理</template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">
+              <router-link to="/user/profile">个人信息</router-link>
+            </el-menu-item>
+            <el-menu-item index="1-2">
+              <router-link to="/user/list">用户列表</router-link>
+            </el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title"><i class="el-icon-caret-right"></i>内容管理</template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1">分类管理</el-menu-item>
+            <el-menu-item index="2-2">内容列表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
+    </el-aside>
+
+    <el-container>
+      <el-header style="text-align: right; font-size: 12px">
+        <el-dropdown>
+          <i class="el-icon-setting" style="margin-right:15px"></i>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-header>
+
+      <el-main>
+        <router-view/>
+      </el-main>
+
+    </el-container>
+  </el-container>
+</div>
+</template>
+
+<script>
+    export default {
+        name: "Main"
+    }
+</script>
+
+<style scoped lang="scss">
+  .el-header {
+    background-color: #048bd1;
+    color: #333;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    color: #333;
+  }
+</style>
+```
+
+##### 3.在router目录下的index.js中引入。
+
+```js
+import Vue from 'vue'
+import Router from 'vue-router'
+
+import Main from '../views/Main'
+import Login from '../views/Login'
+
+import UserList from '../views/user/List'
+import UserProfile from '../views/user/Profile'
+
+
+Vue.use(Router);
+
+export default new Router({
+routes: [
+  {
+    path: '/main',
+    component: Main,      //嵌套路由
+    children: [
+      {
+        path: '/user/profile',
+        component: UserProfile
+      },
+      {
+        path: '/user/list',
+        component: UserList
+      }
+    ]
+  },
+  {
+    path: '/login',
+    component: Login
+  }
+]
+});
+```
+
+### 6.参数传递和重定向
+
+#### 6.1.在之前项目中修改进行
+
+##### 6.1.1.在Main.vue中修改个人信息那一行的代码
+
+```html
+        <!--  name绑定地址，params传递参数   -->
+        <router-link :to="{name: 'user/profile', params:{id:1}}">个人信息</router-link>
+```
+
+##### 6.1.2.在router目录下的index.js下修改相应代码
+
+```js
+path: '/user/profile/:id',         //接收id
+```
+
+##### 6.1.3.在user目录下的Profile.vue中修改相应代码
+
+```html
+<!--所有元素-->
+<template>
+  <div>
+    <h1>个人信息</h1>
+    {{$route.params.id}}
+  </div>
+</template>
+```
+
+#### 6.2.也可以使用props解耦
+
+##### 6.2.1.在router目录下的index.js下修改相应代码。
+
+```js
+path: '/user/profile/:id',
+        name: UserProfile,
+        component: UserProfile,
+        props: true
+```
+
+##### 6.2.2.在user目录下的Profile.vue中修改代码
+
+```html
+<template>
+  <div>
+    <h1>个人信息</h1>
+    {{id}}
+  </div>
+</template>
+
+<script>
+    export default {
+        props: ['id'],
+        name: "UserProfile"
+    }
+</script>
+```
+
+#### 6.3.重定向
+
+1.在Main.vue中添加代码。
+
+```html
+ <el-menu-item index="1-3">
+              <router-link to="/goHome">回到首页</router-link>
+            </el-menu-item>
+```
+
+2.在router目录下的index.js中添加如下代码。
+
+```js
+{
+    path: '/goHome',
+    redirect: '/main'
+  }
+```
+
+当点击回到首页时，/goHome请求会重定向到/main页面。

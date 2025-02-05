@@ -1,0 +1,706 @@
+---
+title: java核心技术第5章
+date: 2020-05-20 15:00:50
+tags: java
+---
+
+这章讲解类，超类和子类，Object：所有类的超类，泛型数组列表，对象包装器与自动装箱，参数数量可变的方法，枚举类。
+
+<!--more-->
+
+## 第五章，继承
+
+### 5.1.类，超类和子类
+
+#### 5.1.1.定义子类
+
+可以如下继承Employee类来定义Manager类，这里使用关键字extends表示继承。
+
+```java
+public class Manager extends Employee{
+    ----
+}
+```
+
+关键字extends表明正在构造的一个新类派生于一个已存在的类。这个已存在的类称为超类（基类或父类）。新类称为子类（派生类互或孩子类）。超类和子类是java程序员最常用的两个术语，而了解其他语言的程序员可能更加偏爱使用父类和孩子类，这也能很贴切地体现“继承”。
+
+尽管Employee类是一个超类，但并不是因为它优于子类或者拥有比子类更多的功能。恰恰相反，子类比超类有着更多的功能。
+
+通过扩展超类定义子类的时候，只需要指出子类与超类的不同之处。因此在设计类的时候，应该将最一般的方法放在超类中，而将更特殊的方法放在子类中，这种将通用功能抽取到超类的做法在面向对象程序设计中十分普遍。
+
+#### 5.1.2.覆盖方法
+
+超类中的有些办法对子类Manager并不一定适用。具体来讲，Manager类的getSalary方法与超类的不同。为此，需要提供一个新的方法来覆盖超类的那个方法。注意，在覆盖一个方法的时候，子类方法不能低于超类方法的可见性。
+
+```java
+public class Manager extends Employee{
+    public double getSalary(){
+        
+    }
+}
+```
+
+当我们希望调用超类Employee中的getSalary方法，而不是当前类的这个方法。为此，可以使用特殊的关键字super解决这个问题。
+
+```java
+super.getSalary()
+```
+
+这个语法调用的是Employee类中的getSalary方法。
+
+注释：有些人认为super与this是类似的概念。实际上，这样比较并不恰当。这是因为super不是一个对象的引用。例如，不能将super
+
+赋给另一个对象变量，它只是一个指示编译器调用超类方法的特殊关键字。
+
+在子类中可以增加字段，增加方法或覆盖超类的方法。不过，继承绝对不会删除任何字段或方法。
+
+#### 5.1.3.子类构造器
+
+我们来提供一个构造器。
+
+```java
+public Manager(String name,double salary,int year,int month,int day){
+    super(name,salary,year,month,day);
+    bonus = 0;
+}
+```
+
+这里的关键字super具有不同的含义。这是调用超类中带有name,salary,year,month,day参数的构造器。
+
+由于Manager类的构造器不能访问Employee类的私有字段，所以必须通过一个构造器来初始化这些私有字段。使用super调用构造器的语句必须是子类构造器的第一条语句。
+
+如果子类的构造器没有显示地调用超类的构造器，将自动地调用超类的无参数构造器。
+
+is-a规则可以简单的判断是否将数据设计为继承关系。如果子类的每一个对象也是超类的对象，那么可以使用继承。
+
+```java
+package inheritance;
+
+public class ManagerTest {
+
+	public static void main(String[] args) {
+		var boss = new Manager("Carl Cracker", 80000, 1987, 12, 15);
+		boss.setBonus(5000);
+		var staff = new Employee[3];
+		
+		staff[0] = boss;
+		staff[1] = new Employee("Harry Hacker", 50000, 1989, 10, 1);
+		staff[2] = new Employee("Tommy Tester", 40000, 1990, 3, 15);
+		for(Employee e : staff)
+			System.out.println("name="+ e.getName() + " salary=" + e.getSalary());
+	}
+}
+
+```
+
+```java
+package inheritance;
+
+import java.time.*;
+
+public class Employee {     //超类
+
+		private String name;
+		private double salary;
+		private LocalDate hireDay;
+		
+		public Employee(String name, double salary, int year, int month, int day) { //构造器
+			this.name = name;
+			this.salary = salary;
+			hireDay = LocalDate.of(year, month, day);
+		}
+		//3个访问器
+		public String getName() {
+			return name;
+		}
+		public double getSalary() {
+			return salary;
+		}
+		public LocalDate getHireDay() {
+			return hireDay;
+		}
+		//更改器
+		public void raiseSalary(double byPercent) {
+			double raise = this.salary * byPercent / 100;
+			this.salary += raise;
+		}
+	}
+
+
+```
+
+```java
+package inheritance;
+
+public class Manager extends Employee {
+
+	private double bonus;
+	//构造器
+	public Manager(String name, double salary, int year, int month, int day) {
+		super(name, salary, year, month, day); //super调用超类构造器，super必须是第一句
+		bonus = 0;
+	}
+	
+	public double getSalary() {
+		double baseSalary = super.getSalary();    //调用超类的getSalary()方法
+		return baseSalary + bonus;
+	}
+	//更改器
+	public void setBonus(double b) {
+		bonus = b;
+	}
+}
+
+```
+
+#### 5.1.4.继承层次
+
+继承并不限于一个层次。通常，一个祖先类可以有多个子孙链。
+
+#### 5.1.5.多态
+
+在java程序设计语言中，对象变量是多态（一个对象变量可以指示多种实际类型的现象）的。一个Employe类型的变量即可以引用一个Employee类型的对象，也可以引用Employee类的任何一个子类的对象。
+
+```java
+Manager boss = new Manager(....);
+Employee[] staff = new Employee[3];
+
+staff[0] = boss;
+```
+
+不过，不能将超类的引用赋给子类变量。例如，下面的就是违法的。
+
+```java
+Manager m = staff[0];
+```
+
+#### 5.1.6.理解方法调用
+
+下面假设调用x.f(args)，隐式参数x声明为类C的一个对象。下面是调用过程的详细描述。
+
+1.编译器查看对象的声明类型和方法名。
+
+2.编译器确定方法调用中提供的参数类型。
+
+3.如果是private,static,final方法或者构造器，那么编译器将可以准确地知道应该调用哪个方法，这称为静态绑定。
+
+4.程序运行并且采用动态绑定(在允许时能够自动地选择恰当的方法)调用方法时，虚拟机必须调用与x所引用对象的实际类型对应的那个方法。
+
+#### 5.1.7.阻止继承：final类和方法
+
+有时候，我们可能希望阻止人们利用某个类定义子类。不允许扩展的类被称为final类、例如：假设希望阻止人们派生Executive类的子类，就可以在声明这个类的时候使用final修饰符。声明格式如下：
+
+```java
+public final class Executive entends Manager{
+    ----
+}
+```
+
+类中的某个特定方法也可以被声明为final。如果这样做，子类就不能覆盖这个方法(final类中的所有办法自动地成为final方法)。
+
+```java
+public class Employee{
+    public final String getName(){
+        return name;
+    }
+}
+```
+
+将方法类声明为final的主要原因是：确保它们不会在子类中改变语义。
+
+#### 5.1.8.强制类型转换
+
+有时候也可能需要将某个类的对象引用转换成另一个类的对象引用。仅需要用圆括号将目标类名括起来。
+
+```java
+Manager boss = (Manager) staff[0];
+```
+
+进行强制转换的唯一原因是：要在暂时忽略对象的实际类型之后使用对象的全部功能。
+
+#### 5.1.9.抽象类
+
+为了提高程序的清晰性，包含一个或多个抽象方法的类本身必须被声明为抽象的。使用abstract关键字。
+
+```java
+public abstract class Person{
+    -----
+        public abstract String getDescription();
+}
+```
+
+除了抽象方法外，抽象类还可以包含实例字段和具体方法。
+
+```java
+public abstract class Person{
+    private String name;             //实例字段
+    
+    public Person(String name){
+        this.name = name;
+    }
+    
+    public abstract String getDescription(); 
+    
+    public String getName(){         //具体方法
+        return name;
+    }
+}
+```
+
+建议尽量将通用的字段和方法(不管是否抽象)放在超类(不管是不是抽象类)中。
+
+抽象方法充当着占位方法的角色，它们在子类中具体实现。扩展抽象类可以有两种选择。一种是在子类中保留抽象类的部分或所有抽象方法仍未定义，这样就必须将子类也标配记为抽象类。另一种做法是定义全部方法，这样一来，子类就不是抽象的了。
+
+注意，抽象类不能实例化。
+
+```java
+package abstractClasses;
+
+public class PersonTest {
+
+	public static void main(String[] args) {
+		var people = new Person[2];
+		people[0] = new Employee("Harry Hacker", 50000, 1989, 10, 1);
+		people[1] = new Student("Maria Morris", "computer science");
+		
+		for(Person p : people)
+			System.out.println(p.getName() + ", " + p.getDescription());
+	}
+}
+
+```
+
+```java
+package abstractClasses;
+
+public abstract class Person {     //包含一个或多个抽象方法的类必须被申明为abstract抽象类
+
+	public abstract String getDescription();   //抽象方法，不一定需要具体实现这个方法
+	
+    private String name;
+	
+	public Person(String name) {
+		this.name = name;
+	}
+	public String getName() {
+		return name;
+	}
+}
+
+```
+
+```java
+package abstractClasses;
+import java.time.*;
+
+public class Employee extends Person {     //子类，继承Person类
+
+		private double salary;
+		private LocalDate hireDay;
+		
+		public Employee(String name, double salary, int year, int month, int day) { //构造器
+			super(name);
+			this.salary = salary;
+			hireDay = LocalDate.of(year, month, day);
+		}
+		//3个访问器
+		public double getSalary() {
+			return salary;
+		}
+		public LocalDate getHireDay() {
+			return hireDay;
+		}
+		public String getDescription() {
+			return String.format("员工薪水为$%.2f", salary);
+		}
+		//更改器
+		public void raiseSalary(double byPercent) {
+			double raise = this.salary * byPercent / 100;
+			this.salary += raise;
+		}
+	}
+
+
+```
+
+```java
+package abstractClasses;
+
+public class Student extends Person {     //Student子类，继承Person类
+
+	private String major;
+	
+	public Student(String name, String major) {
+		super(name);
+		this.major = major;
+	}
+	public String getDescription() {
+		return "主修专业是 " + major;
+	}
+}
+
+```
+
+#### 5.1.10.受保护访问
+
+如果希望限制超类中的某个方法只允许子类访问，或者更少见地，希望允许子类的方法访问超类的某个字段。这时，需要将这些类方法或字段声明为受保护(protected)。
+
+下面对java中的4个访问控制修饰符做个小结。
+
+1.仅对本类可见-----private。
+
+2.对外部完全可见------public。
+
+3.对本包和所有子类可见------protected。
+
+4.对本包可见-----默认(很遗憾)，不需要修饰符。
+
+### 5.2.Object:所有类的超类
+
+Object类是java中所有类的始祖，在java中每个类都扩展了Object。如果没有明确指出超类，Object就被认为是这个类的超类。
+
+#### 5.2.1.Object类型的变量
+
+可以使用Object类型的变量引用任何类型对象。
+
+```java
+Object obj = new Employee("Harry Hacker", 35000);
+```
+
+当然想要对其中的内容进行具体的操作，还需要清楚对象的原始类型，并进行相应的强制类型转换。
+
+```java
+Employee e = (Employee) obj;
+```
+
+在java中，只有基本类型不是对象。所有的数组类型，不管是对象数组还是基本类型的数组都扩展了Object类。
+
+#### 5.2.2.equals方法
+
+Object类中的equals方法用于检测一个对象是否等于另一个对象。经常需要基于状态检测对象的相等性，如果两个对象有相同的状态，才认为这两个对象是相等的。
+
+#### 5.2.3.相等测试与继承
+
+java语言规范要求equals方法具有下面的特性。
+
+1.自反性：对于任何非空引用x，x.equals(x)应该返回true。
+
+2.对称性：对于任何引用x和y，当且仅当y.equals(x)返回true时，x.equals(y)返回true。
+
+3.传递性：对于任何引用x,y,z，如果x.equals(y)返回true，y.equals(z)返回true，x.equals(z)也应该返回true。
+
+4.一致性：如果x和y引用的对象没有发生变化，反复调用x.equals(y)应该返回相同的结果。
+
+5.对于任何非空引用x,x.equals(null)应该返回false。
+
+#### 5.2.4.hashCode方法
+
+散列码(hash code)是由对象导出的一个整列值。散列表是没有规则的。如果x和y是两个不同的对象，x.hashCode()与y.hashCode()基本上不会相同。如下列举了几个通过调用String类的hashCode方法得到的散列码。
+
+| 字符串 | 散列码      |
+| ------ | ----------- |
+| Hello  | 69609650    |
+| Harry  | 69496448    |
+| Hacker | -2141031506 |
+
+#### 5.2.5.toString方法
+
+在Object中还有一个重要的方法，就是toString方法，它会返回表示对象值的一个字符串。下面是一个典型的例子。
+
+Point类的toString方法将返回这样的字符串。
+
+```java
+java.awt.Point[x=10,y=20]
+```
+
+绝大多数的toString方法都遵循这样的格式：类的名字，随后是一对方括号括起来的字段值。
+
+```java
+public String toString(){
+    return "Employee[name=" + name +", salary=" + salary +", hireDay=" + hireDay +"]";
+}
+```
+
+实际上，还可以设计得好一点。最好通过调用方法获得类名的字符串，而不要将类名硬编码写到toString方法中。
+
+```java
+public String toString(){
+    return "getClass().getName() + "[name=" + name +", salary=" + salary +", hireDay=" + hireDay +"]";
+}
+```
+
+这样toString方法也可以由子类调用。当然，设计子类的程序员应该定义自己的toString方法，并加入子类的字段。
+
+随处可见toString方法的主要原因是：只要对象与一个字符串通过操作符"+"连接起来，java编译器就会自动调用toString方法来获得这个对象的字符串描述。
+
+强烈建议为自定义的每一个类添加toString方法。
+
+如果x是一个任意对象，并调用System.out.println(x)。pringln方法就会简单的调用x.toString()，并打印输出得到的字符串。
+
+```java
+package equals;
+
+public class EqualsTest {
+
+	public static void main(String[] args) {
+		
+		var alices1 = new Employee("Aclice Adams", 75000, 1987, 12, 15);
+		var alices2 = alices1;
+		var alices3 = new Employee("Aclice Adams", 75000, 1987, 12, 15);
+		var bob = new Employee("Bob Brandson", 50000, 1989, 10, 1);   
+		
+		System.out.println("alices1 == alices2: " + (alices1 == alices2));
+		System.out.println("alices1 == alices2: " + (alices1 == alices3));
+		System.out.println("alices1.equal(alices3): " + alices1.equals(alices3));
+		System.out.println("alices1.equal(bob): " + alices1.equals(bob));
+		//只要对象与一个字符串通过操作符“+”连接起来，java编译器就会自动调用toString方法
+		//来获得这个对象的字符串描述
+		System.out.println("bob.toString(): " + bob); //Employee类的toString方法
+		
+		var carl = new Manager("Carl Cracker", 80000, 1987, 12, 15);
+		var boss = new Manager("Carl Cracker", 80000, 1987, 12, 15);
+		boss.setBonus(5000);
+		
+		System.out.println("Boss.toString(): " + boss);   //Manager类的toString方法
+		
+		System.out.println("carl.equals(boss): " + carl.equals(boss));
+		System.out.println("alices1.hashCode(): " + alices1.hashCode());
+		System.out.println("alices3.hashCode(): " + alices3.hashCode());
+		System.out.println("bob.hashCode(): " + bob.hashCode());
+		System.out.println("carl.hashCode(): " + carl.hashCode());
+	}
+}
+
+```
+
+```java
+package equals;
+import java.time.*;
+import java.util.Objects;
+public class Employee {     //超类
+
+		private String name;
+		private double salary;
+		private LocalDate hireDay;
+		
+		public Employee(String name, double salary, int year, int month, int day) { //构造器
+			this.name = name;
+			this.salary = salary;
+			hireDay = LocalDate.of(year, month, day);
+		}
+		public String getName() {
+			return name;
+		}
+		public double getSalary() {
+			return salary;
+		}
+		public LocalDate getHireDay() {
+			return hireDay;
+		}
+		public void raiseSalary(double byPercent) {
+			double raise = this.salary * byPercent / 100;
+			this.salary += raise;
+		}
+		//equals方法的实现机制,只有2个对象属于同一个类时，才有可能相等。
+		public boolean equals(Object otherObject) {
+			if(this == otherObject) return true;     //快速检测this与otherObject是否相同
+			if(otherObject == null) return false;    //如果显式参数为null，则必须返回false
+			if(getClass() != otherObject.getClass()) return false;   //如果类别不匹配，则它们不能相等
+			var other = (Employee) otherObject;  //现在我们知道otherObject是一个非空员工
+			return Objects.equals(name, other.name)     //测试字段是否具有相同的值
+					&& salary == other.salary && Objects.equals(hireDay, other.hireDay);
+		}
+		public int hashCode() {
+			return Objects.hash(name, salary, hireDay);
+		}
+		//强烈建议为自定义的每一个类都添加toString方法
+		public String toString() {
+			return getClass().getName() + "[name =" +name + ",salary=" + salary + ",hireDay=" 
+					+ hireDay + "]";
+		}
+	}
+
+
+
+```
+
+```java
+package equals;
+
+public class Manager extends Employee {
+
+	private double bonus;
+	//构造器
+	public Manager(String name, double salary, int year, int month, int day) {
+		super(name, salary, year, month, day); //super调用超类构造器，super必须是第一句
+		bonus = 0;
+	}
+	
+	public double getSalary() {
+		double baseSalary = super.getSalary();    //调用超类的getSalary()方法
+		return baseSalary + bonus;
+	}
+	//更改器
+	public void setBonus(double bonus) {
+		this.bonus = 0;
+	}
+	public boolean equals(Object otherObject) {
+		if(!super.equals(otherObject)) return false;   //super.equals检查this和otherObject属于同一类
+		var other = (Manager) otherObject;
+		return bonus == other.bonus;
+	}
+	public int hashCode() {
+		return java.util.Objects.hash(super.hashCode(), bonus);
+	}
+	//强烈建议为自定义的每一个类都添加toString方法
+	public String toString() {
+		return super.toString() + "[bonus=" + bonus + "]";
+	}
+}
+
+```
+
+
+
+### 5.3.泛型数组列表
+
+java中有一个类，ArrayList。这个类类似于数组，但在添加或删除元素时，它能够自动地调整数组容量，而不需要为此编写任何代码。
+
+ArrayList是一个由类型参数的泛型类。为了知道数组列表保存的元素对象的类型，需要用一对尖括号将类名括起来追加到ArrayList后面。
+
+#### 5.3.1.声明和数组列表
+
+声明和构造一个保存Employee对象的数组列表。
+
+```java
+ArrayList<Employee> staff = new ArrayList<Employee>();
+```
+
+在java10中，最好使用var关键字以避免重复写类名。
+
+```java
+var staff = new ArrayList<Employee>();
+```
+
+如果没有使用var关键字，可以省去右边的类型参数。
+
+```java
+ArrayList<Employee> staff = new ArrayList<>();
+```
+
+#### 5.3.2.访问数组列表元素
+
+ArrayList类并不是java程序设计语言的一部分，它只是由某个人编写并在标准库中提供的一个实用工具类。
+
+例如，要设置第i个元素，可以使用set方法。
+
+```java
+staff.set(i,harry);    //等价于对数组a的元素赋值，a[i]=harry;
+```
+
+要得到一个数组列表的元素，可以使用get方法。
+
+```java
+Employee e =staff.get(i);  //等价于Employee e = a[i];
+```
+
+```java
+package arrayList;
+import java.util.*;
+public class arrayListTest {
+
+	public static void main(String[] args) {
+		/**1.申明方式为var xxx = new ArrayList<对象名>（）；
+		 * 2.使用add方法添加元素到数组中，方式为xxx.add(new 对象名（添加的数组元素）)
+		 */
+		var staff = new ArrayList<Employee>();
+		staff.add(new Employee("Carl Cracker", 75000, 1987, 12, 15));
+		staff.add(new Employee("Harry Hacker", 50000, 1989, 10, 11));
+		staff.add(new Employee("Tony Tester", 40000, 1990, 3, 15));	
+		for(Employee e : staff)
+			e.raiseSalary(5);
+		for(Employee e : staff)
+			System.out.println("name=" + e.getName() + ",salary=" + e.getSalary() +
+					",hireDay="+ e.getHireDay());
+	}
+	
+}
+
+```
+
+### 5.4.对象包装器和自动装箱
+
+有时，需要将int这样的基本类型转换为对象。所有的基本类型都有一个与之对应的类。这些类被称为包装器。
+
+Interger,long,Float,Double,Short,Byte,Character,和Boolean(前6个类派生于公共的超类Number)。包装器类是不可变的，即一旦构造了包装器，就不允许更改包装在其中的值。同时包装器类还是final，因此不能派生它们的子类。
+
+### 5.6.枚举(enum)类
+
+下面是一个枚举的例子。
+
+```java
+public enum Size{SMALL,MEDIUM,LARGE,EXTRA_LARGE}
+```
+
+这个声明定义的类型是一个类，它刚好有4个实例，不可能构造一个新的对象。
+
+枚举的方法总是私有的。
+
+```java
+package enums;
+import java.util.*;
+public class EnumTest {
+
+	public static void main(String[] args) {
+		var in = new Scanner(System.in);
+		System.out.println("尺寸类型: (SMALL, MEDIUM, LARGE, EXTRA_LARGE ) ");
+		/**xxx.xx = 类名.valueOf(xxx.class,x)格式
+		 * 将xx类型改为x类型
+		 * 
+		 */
+		String input = in.next().toUpperCase();
+		Size size = Enum.valueOf(Size.class, input);
+		System.out.println("size=" + size);
+		System.out.println("abbreviation=" + size.getAbbrevation());
+		if(size == Size.EXTRA_LARGE)
+			System.out.println("Good job --you paid attention to the _.");
+	}
+}
+
+enum Size{                //所有的枚举类都是Enum的子类
+	
+    SMALL("S"), MEDIUM("M"), LARGE("L"), EXTRA_LARGE("XL");
+	
+    private Size(String abbreviation) {            //枚举的构造器总是私有的。
+		this.abbreviation = abbreviation;
+	}
+	
+    public String getAbbrevation() {
+		return abbreviation;
+	}
+	
+    private String abbreviation;      
+}
+```
+
+### 5.7.反射
+
+待续。
+
+### 5.8.继承的设计技巧
+
+我们有对设计继承很有帮助的一些技巧。
+
+1.将公共操作和字段放在超类中。
+
+2.不要使用受保护的字段。
+
+3.使用继承实现is-a关系。
+
+4.除非所有继承的方法都有意义，否则不要使用继承。
+
+5.在覆盖方法时，不要改变预期的行为。
+
+6.使用多态，而不要使用类型信息。
+
+7.不要滥用反射。

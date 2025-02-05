@@ -1,0 +1,718 @@
+---
+title: java核心技术第12章
+date: 2020-05-29 16:03:19
+tags: java
+---
+
+这章讲解线程状态，线程属性，同步，线程安全的集合，任务和线程池，异步计算，进程。
+
+<!--more-->
+
+## 第十二章，并发
+
+多进程和多线程有哪些区别呢？本质的区别在于每个进程都拥有自己的一整套变量，而线程则共享数据。
+
+### 12.1.什么是线程
+
+首先来看一个使用了两个线程的简单程序。这个程序可以在银行账户完成资金转账。我们使用Bank类，它可以存储给定数目的账户的余额。transfer方法将一定金额从一个账户转移到另一个账户。
+
+在第一个线程中，我们将钱从账户0转移到账户1。第二个线程将钱从账户2转移到账户3.下面是在一个单独的线程中允许一个任务的简单过程。
+
+1.将执行这个任务的代码放在一个类的run方法中，这个类要实现Runnable接口。Runnable接口非常简单，只有一个办法。
+
+```java
+public interface Runnable{
+    void run();
+}
+```
+
+由于Runnable是一个函数式接口，可以用一个lambda表达式创建一个实例。
+
+```java
+Runnable r = () -> {--------};
+```
+
+2.从这个Runnable构造一个Thread对象。
+
+```java
+var t = new Thread(r);
+```
+
+3.用start启动线程。
+
+```java
+t.start();
+```
+
+为了建立单独的线程来完成转账，我们只需要把转账代码放在一个Runnable的run方法中，然后用start方法启动一个线程。
+
+```java
+Runnable r = () -> {
+    try{
+        for(int i = 0; i < STEPS; i++){
+            double amount = MAX_AMOUNT * Math.random();
+            bank.transfer(0,1,amount);
+            Thread.sleep((int) DELAY * Math.random());   //捕获sleep方法可能抛出的InterruptedException异常。
+        }
+    }
+    catch(InterruptedException e){
+        
+    }
+};
+
+var t = new Thread(r);
+
+t.start();
+```
+
+对于给定的步骤数，这个线程会转账一个随机金额，然后休眠一个随机的延迟时间。一般来说，中断用来请求终止一个线程。程序还会启动第二个线程，它从账户2向账户3转移。
+
+```java
+package threads;
+
+public class ThreadTest{
+    public static final int DELAY = 10;
+    public static final int STEPS = 100;
+    public static final double MAX_AMOUNT = 1000;
+    
+        
+    var bank = new Bank(4, 10000);
+       
+    Runnable task1 = () ->{
+            try{
+                for(int i = 0; i < STEPS; i++){
+                    double amount = MAX_AMOUNT * Math.random();
+                    bank.transfer(0,1,amount);
+                    Thread.sleep((int) (DELAY * Math.random()));
+                }
+            }
+            catch(InterruptedException e){
+                
+            }
+        };
+    
+    Runnable task2 = () -> {
+        try{
+            for(int i =0; i< STEPS; i++){
+                double amount = MAX_AMOUNT * Math.random();
+                bank.transfer(2,3,amount);
+                Thread.sleep((int) (DELAY * Math.random()));
+            }
+        }
+        catch(InterruptedException e){
+            
+        }
+    };
+    
+    new Thread(task1).start();
+   
+    new Thread(task2).start();
+}
+}
+```
+
+### 12.2.线程状态
+
+线程可以有如下6种状态。
+
+1.New(新建)。2.Runnable(可运行)。3.Blocked(阻塞)。4.Waiting(等待)。5.Timed waiting(计时等待)。6.Terminated(终止)。
+
+下面分别对每一种状态进行解释。要确定一个线程的当前状态，只需要调用getState方法。
+
+#### 12.2.1.新建线程
+
+当用new操作符创建一个新线程时，如 new Thread(r)，这个线程还没有开始运行。这意味着它的状态是新建(new)。当一个线程处于新建状态时，程序还没有开始运行线程中的代码。在线程运行之前还有一些基础工作要做。
+
+#### 12.2.2.可运行线程
+
+一旦调用start方法，线程就处于可运行(runnable)状态。一个可运行的线程可能正在允许也可能没有允许。要由操作系统为线程提供具体的运行时间。(不过，java规范没有将正在允许作为一个单独的状态。一个正在运行的线程仍然处于可运行状态)。
+
+一旦一个线程开始运行，它不一定始终保持运行。事实上，运行中的线程有时需要暂停，让其他线程有机会运行。线程调度的细节依赖于操作系统提供的服务。抢占式调度系统给每一个可运行线程一个时间片来执行该任务。当时间片用完时，操作系统剥夺该线程的运行权，并给另一个线程一个机会来运行。当选择下一个线程时，操作系统会考虑线程的优先级。
+
+记住，在任何给定时刻，一个可运行的线程可能正在运行也没有运行(正是因为这个原因，这个状态被称为“可运行”而不是“运行”)。
+
+#### 12.2.3.阻塞和等待线程
+
+当线程处于阻塞或等待状态时，它暂时是不活动的。它不允许任何代码，而且消耗量最少的资源，要由线程调度器重新激活这个线程。
+
+1.当一个线程试图获取一个内部的对象锁(不是java.util.concurrent库中的Lock)，而这个锁目前被其他线程占有，该线程就会被阻塞。当所有其他线程都释放了这个锁，并且线程调度器允许该线程持有这个锁时，它将变成非阻塞状态。
+
+2.当线程等待另一个线程通知调度器出现一个条件时，这个线程会进入等待状态。调用Object.wait方法或Thread.join方法，或者是等待java.concurrent库中的Lock或Condition时，就会出现这种情况。实际上，阻塞状态与等待状态并没有太大区别。
+
+3.有几个方法有超时参数，调用这些方法会让线程进入计时等待(timed waiting)状态。这一状态将一直保持到超时期满或者接收到适当的通知。带有超时参数的方法有Thread.sleep和计时版的Object.wait，Thread.join，Lock.tryLock以及Condition.await。
+
+当一个线程阻塞或等待时(或终止时)，可以调度另一个线程运行。当一个线程被重新激活(例如，因为超时期满或成功地获得了一个锁)。调度器检查它是否具有比当前运行线程更高的优先级。如果是这样，调度器会剥夺某个当前运行线程的运行权，选择一个新线程运行。
+
+#### 12.2.4.终止线程
+
+线程会由于以下两个原因之一而终止。
+
+1.run方法正常退出，线程自然终止。
+
+2.因为一个没有捕获的异常终止了run方法，使线程意味终止。
+
+具体来讲，可以调用线程的stop方法杀死一个线程。该方法抛出一个ThreadDeath错误对象，这会杀死线程。不过，stop方法已经废弃，不要在代码中调用这个方法。
+
+### 12.3.线程属性
+
+#### 12.3.1.中断线程
+
+当线程的run方法执行方法体中最后一条语句后再执行return语句返回时，或者出现了方法中没有捕获的异常时，线程将终止。目前没有办法可以强制线程终止。不过，interrupt方法可以用来请求终止一个线程。
+
+当对一个线程调用interrupt方法时，就会设置线程的中断状态。这是每个线程都有的boolean标志。每个线程都应该不时的检查这个标志，以判断线程是否被中断。想要得出是否设置了中断状态，首先调用静态的Thread.currentThread方法获得当前线程，然后调用isInterrupted方法。
+
+```java
+while(!Thread.currentThread().isInterrupted() && --------){
+    --------
+}
+```
+
+但是，如果线程被阻塞，就无法检查中断状态。这里就要引入InterruptedException异常。当在一个被sleep或wait调用阻塞的线程上调用interrup方法时，那么阻塞调用(即sleep或wait调用)将被一个InterruptedException异常中断。
+
+没有任何语言要求被中断的线程应当终止。中断一个线程只是要引起它的注意。被中断的线程可以决定如何响应中断。某些线程非常重要，所以应该处理这个异常。然后再继续执行。但是，更普遍的情况是，线程只希望将中断解释为一个终止请求。这种线程的run方法具有如下形式。
+
+```java
+Runnable r = () -> {
+    try{
+        ---
+        while(!Thread.currentThread().isInterrupted() && -------){
+           --------
+        }
+    }
+    catch(InterruptedException e){
+        //thread was interrupted during sleep or wait
+    }
+    finally{
+        ---------
+    }
+    //exiting the run method terminates the thread
+};
+```
+
+如果在每次工作迭代之后都调用sleep方法(或者其他可中断方法)，isInterrupted检查即没有必要也没有用处。如果设置了中断状态，此时倘若调用sleep方法，它不会休眠。实际上，它会清除中断状态，而应当捕获InterruptedException。因此，如果你的循环调用了sleep，不要检测中断状态，而应当捕获InterruptedException异常，如下所示。
+
+```java
+Runnable r = () -> {
+    try{
+        ----
+        while(-------){
+            --------
+            Thread.sleep(delay);
+        }
+    }
+    catch(InterruptedException e){
+        //thread was interrupted during sleep
+    }
+    finally{
+        -----------
+    }
+    //exiting the run method terminates the thread
+}
+```
+
+注释：有两个非常类似的方法，interrupted和isInterrupted。interrupted方法是一个静态方法，它检查当前线程是否被中断。而且，调用interrupted方法会清除该线程的中断状态。另一方面，isInterrupted方法是一个实例方法，可以用来检查是否有线程被中断。调用这个方法不会改变中断状态。
+
+如果想不出在catch子句中可以做什么有意义的工作，仍然有两种合理的选择。
+
+1.在catch子句中调用Thread.currentThread().interrup()来设置中断状态。这样一来调用者就可以检测中断状态。
+
+```java
+void mySubTask(){
+    -----
+    try{ 
+        sleep(delay);
+    }
+    catch(InterruptedException e){
+        
+        Thread.currentThread().interrupt();
+    
+    }
+    ----
+}
+```
+
+2.或者，更好的选择是，用throws InterruptedException标记你的方法，去掉try语句块。这样一来调用者(或者最终的run方法)就可以捕获这个异常。
+
+```java
+void mySubTask() throws InterruptedException{
+    sleep(delay);
+}
+```
+
+#### 12.3.3.线程名
+
+默认情况下，线程有容易记住的名字，如Thread-2。可以用serName方法为线程设置任何名字。
+
+```java
+var e = new Thread(runnable);
+
+t.setName("Web crawler");
+```
+
+这在线程转储时时可能有大用。
+
+#### 12.3.4.未捕获异常的处理器
+
+线程的run方法不能抛出任何检查型异常，但是，非检查型异常可能会导致线程终止。在这种情况下，线程会死亡。
+
+不过，对于可以传播的异常，并没有任何catch子句。实际上，在线程死亡之前，异常会传递到一个用于处理未捕获异常的处理器。
+
+这个处理器必须属于一个实现了Thread.UncaughtExceptionHandler接口的类。这个接口只有一个方法。
+
+```java
+void uncaughtException(Thread t, Throwable e)
+```
+
+可以用setUncaughtExceptionHandler方法为任何一个线程安装一个处理器。也可以用Thread类的静态方法setDefaultUncaughtExceptionHandler为所有线程安装一个默认的处理器。替代处理器可以使用日志API将未捕获异常的报告发送到一个日志文件。如果没有安装默认处理器，默认处理器则为null。但是，如果没有为单个线程安装处理器，那么处理器就是该线程的ThreadGroup对象。
+
+线程组是可以一起管理的线程的集合。由于现在引入了更好的特性来处理线程集合，所以不要在程序中使用线程组。
+
+ThreadGroup类实现了Thread.UncaughtException接口。它的uncaughtException方法执行以下操作。
+
+1.如果该线程有父线程组，那么调用父线程组的uncaughtException方法。
+
+2.否则，如果Thread.getDefaultExceptionHandler方法返回一个非null的处理器，则调用该处理器。
+
+3.否则，如果Throwable是ThreadDeath的一个实例，什么都不做。
+
+4.否则，将线程的名字以及Throwable的栈轨迹输出到System.err。
+
+#### 12.3.5.线程优先级
+
+现在不需要使用线程优先级了，只需要了解，用serPriority方法提高或降低任何一个线程的优先级，1-10。
+
+### 12.4.同步
+
+在大多数实际的多线程应用中，两个或两个以上的线程需要共享对同一数据的存取。如果两个线程存取一个对象，并且每个线程分别调用了一个修改该对象状态的方法，会发生什么呢？这种情况通常称为竞争条件。
+
+#### 12.4.1.竞争条件的一个例子
+
+为了避免多线程破坏共享数据，必须学习如何同步存取。在下面的测试程序中，还是考虑模拟的银行。我们随机地选择从哪个源账户转账到目标账户。由于这会产生问题，所以再来仔细查看Bank类transfer方法的代码。
+
+```java
+public void transfer(int from, int to, double amount){
+    System.out.print(Thread.currentThread());
+    accounts[from] -= amount;
+    System.out.printf("%10.2f from %d to %d", amount, from, to);
+    accounts[to] += amount;
+    System.out.printf("Total Balance: %10.2f%n", getTotalBalance());
+}
+```
+
+下面是Runnable实例的代码。run方法不断地从一个给定银行账户取钱。在每次迭代中，run方法选择一个随机的目标账户和一个随机金额，调用bank对象的transfer方法，然后休眠。
+
+```java
+Runnable r = () ->{
+    try{
+        while(true){
+            int toAccount = (int) (bank.size() * Math.random());
+            double amount = MAX_AMOUNT * Math.random();
+            bank.transfer(fromAccount, toAccount,amount);
+            Thread.sleep((int) (DELAY * Math.random()));
+        }
+    }
+    catch(InterruptedException e){
+        
+    }
+}
+```
+
+这个模拟程序运行时，我们不清楚在某时刻某个银行账户中有多少钱，但是我们知道所有账户的总金额应该保持不变。这个程序永远不会停止，只能按CTRL+C来终止这个程序。可以看出，下面的程序到了后面就会出错了。
+
+```java
+package threads;
+import java.until.*;
+public class Bank{
+    
+    private final double[] accounts;
+    
+    public Bank(int n,double initialBalance){
+        accounts = new double[n];
+        Arrays.fill(accounts, initialBalance);
+    }
+    
+    public void transfer(int from,int to, double amount){
+        if(accounts[from] < amount){
+            return;
+        }
+        
+        System.out.print(Thread.currentThread());
+        accounts[from] -= amount;
+        System.out.printf("%10.2f from %d to %d", amount, from, to);
+        accounts[to] += amount;
+        System.out.printf("Total Balance: %10.2f%n", getTotalBalance());
+    }
+    
+    public double getTotalBalance(){
+        double sum = 0;
+        for(double a : accounts){
+            sum += a;
+        }
+        return sum;
+    }
+    
+    public int size(){
+        return accounts.length;
+    }
+}
+```
+
+```java
+package unsynch;
+public class UnsynchBankTest{
+    public static final int NACCOUNTS = 100;
+    public static final double INITIAL_BALANCE = 1000;
+    public static final double MAX_AMOUNT = 1000;
+    public static final int DELAY = 10;
+    
+    public static void main(String[] args){
+        var bank = new Bank(NACCOUNTS, INITIAL_BALANCE);
+        for(int i = 0; i < NACCOUNTS; i++){
+            int fromAccount = i;
+            Runnable r = () -> {
+                try{
+                    while(true){
+                       int toAccount = (int) (bank.size() * Math.random());
+                       double amount = MAX_AMOUNT * Math.random();
+                       bank.transfer(fromAccount, toAccount,amount);
+                       Thread.sleep((int) (DELAY * Math.random()));
+                    }
+                }
+                catch(InterruptedException e){
+                    
+                }
+            };
+            var t = new Thread(r);
+            t.start();
+        }
+    }
+}
+```
+
+#### 12.4.2.竟态条件详解
+
+当两个线程试图同时更新一个账户时，就会出现问题。假设两个线程同时执行指令。
+
+```java
+accounts[to] += amount;
+```
+
+问题在于这不是原子操作。这个指令可能如下处理。
+
+1.将accounts[to]加载到寄存器。
+
+2.增加amount。
+
+3.将结果协会accounts[to]。
+
+现在，假设第一个线程执行步骤1和2.然后，它的运行权被抢占。再假设第二个线程被唤醒，更新account数组中的同一个元素。然后，第一个线程被唤醒并完成其第3步。这个动作会抹去第二个线程所做的更新，这样一来，金额就会出现问题。
+
+#### 12.4.3.锁对象
+
+有两种机制可防止访问代码块。java语言提供了一个synchronized关键字来达到这个目的，另外java5引入了ReentrantLock类。synchronized关键字会自动提供一个锁以及相关的条件。我们相信在分别了解锁和条件的内容之后，就能更容易地理解synchronized关键字。java.until.concurrent框架为这些基础机制提供了单独的类。
+
+用ReentrantLock保护代码块的基本结构如下。
+
+```java
+myLock.lock();
+try{
+   --------
+}
+finally{
+    myLock.unlock();
+}
+```
+
+这个结构确保任何时刻只有一个线程进入临界区。一旦一个线程锁定了锁对象，其他任何线程都无法通过lock语句。当其他线程调用lock时，它们会暂停，直到第一个线程释放这个锁对象。注意，使用锁时，就不能使用try-with-resources语句。
+
+下面使用一个锁来保护Bank类的transfer方法。
+
+```java
+public class Bank{
+    private var bankLock = new ReentrantLock();
+    -----
+    public void transfer(int from, int to, int amount){
+   
+        bankLock.lock();
+        try{
+             System.out.print(Thread.currentThread());
+             accounts[from] -= amount;
+             System.out.printf("%10.2f from %d to %d", amount, from, to);
+             accounts[to] += amount;
+             System.out.printf("Total Balance: %10.2f%n", getTotalBalance());
+        }
+        finally{
+            bankLock.unlock();
+        }
+    }
+
+}
+```
+
+假设一个线程调用了transfer，但是在执行结束前被抢占。再假设第二个线程也调用了transfer，由于第二个线程不能获得锁，将在调用lock方法时被阻塞。它会暂停，必须等待第一个线程执行完transfer方法。当第一个线程释放锁时，第二个线程才能开始运行。
+
+注意，每个Bank对象都有自己的ReentrantLock对象。如果两个线程试图访问同一个Bank对象，那么锁可以用来保证串行化访问。不过，如果两个线程访问不同的Bank对象，每个线程会得到不同的锁对象，两个对象都不会阻塞。因为线程在操纵不同的Bank实例时，线程之间不会相互影响。
+
+这个锁被称为重入锁，因为线程可以反复获得已拥有的锁。锁有一个持有计数来跟踪对lock方法的嵌套调用。线程每一次调用lock后都要调用unlock来释放锁。由于这个特性，被一个锁保护的代码可以调用另一个使用相同锁的方法。
+
+例如，transfer方法调用getTotalBalance方法，这也会封锁bankLock对象，此时bankLock对象的持有计数为2。当getTotalBalance方法退出时，持有计数变回1.当transfer方法退出的时候，持有计数变为0，线程释放锁。
+
+通常我们可能希望**保护会更新或检查共享对象的代码块**，从而能确信当前操作执行完之后其他线程才能使用同一个对象。
+
+#### 12.4.4.条件对象
+
+通常，线程进入临界区后却发现只有满足了某个条件智慧王它才能执行。可以使用一个条件对象来管理那些已经获得了一个锁却不能做有用工作的线程。我们会介绍java库中条件对象的实现(由于历史原因，条件对象经常被称为条件变量)。
+
+现在来优化银行的模拟程序。如果一个账户没有足够的资金转账，我们不希望从这样的账户转出资金。我们必须确保在检查余额与转账活动之间没有其他线程修改余额。为此，我们可以使用一个锁来保护这个测试和转账操作。
+
+```java
+public void transfer(int from, int io, int amount){
+    bankLock.lock();
+    try{
+        while(caaounts[from] < amount){
+            //wait
+        }
+    }
+    finally{
+        bankLock.unlock();
+    }
+}
+```
+
+现在，当账户中没有足够的资金时，我们要等待，直到另一个线程向账户中增加了资金，但是，这个线程刚刚获得了对bankLock的排他性访问权，因此别的线程没有存款的机会。这里就要引入条件对象。
+
+一个锁对象可以有一个或多个相关联的条件对象。你可以用newCondition方法获得一个条件对象。习惯上会给每个条件对象一个合适的名字来反映它表示的条件。例如，在这里我们建立了一个条件对象来表示资金充足条件。
+
+```java
+class Bank{
+    private Condition sufficientFunds;
+    ----
+    public Bank(){
+        
+        sufficientFunds = bankLock.newCondition();
+    
+    }
+}
+```
+
+如果transfer方法发现资金不足，它会调用sufficientFunds.await()；
+
+当前线程现在暂停，并放弃锁。这就允许另一个线程执行，我们希望它能增加账户余额。
+
+等待获取锁的线程和已经调用了wait方法的线程存在本质上的不同。一旦一个线程调用了await方法，它就进入这个条件的等待集。当锁可用时，该线程并不会变为可运行状态。实际上，它仍然保持非活动状态，直到另一个线程在同一条件上调用singnalAll方法。
+
+当另一个线程完成转账时，它应该调用sufficientFunds.singnalAll();
+
+这个调用会重新激活等待这个条件的所有线程。当这些线程从等待集中移出时，它们再次成为可运行的线程，调度器最终将再次将它们激活。同时，它们会尝试重新进入该对象。一旦锁可以，它们中的某个线程将从await调用返回，得到这个锁，并从之前暂停的地方继续执行。
+
+此时，线程应当再次测试条件。不能保证现在一定满足条件-------singnalaAll方法仅仅是通知等待的线程：现在有可能满足条件，值得再次检查条件。
+
+最终，需要有某个线程调用singnalAll方法。当一个线程调用await时，它没有办法重新自行激活。它寄希望于其他线程。如果没有其他线程来重新激活等待的线程，它就永远不再允许了。这将导致令人不快的死锁现象。如果所有其他线程都被阻塞，最后一个活动线程调用了await方法但没有先解除另外某个线程的阻塞，现在这个线程也会阻塞。此时没有线程可以解除其他线程的阻塞状态，程序会永远挂起。
+
+从经验上讲，只要一个对象的状态有变化，而且可能有利于等待的线程，就可以调用singnalAll。例如，当一个账户余额发生改变时，就应该再给等待的线程一个机会来检查余额。在这个例子中，完成转账时，我们就会调用singnalAll方法。
+
+```java
+public void transfer(int from, int to, int amount){
+    bankLock.lock();
+    try{
+        while(accounts[from] < amount)
+            ----
+        sufficientFunds.singnalAll();
+    }
+    finally{
+        bankLock.unlock();
+    }
+}
+```
+
+注意singnalAll调用不会立即激活一个等待的线程。它只是解除等待线程的阻塞，使这些线程可以在当前线程释放锁之后竞争对象。
+
+另一个方法signal只是随机选择等待集中的一个线程，并解除这个线程的阻塞状态。这更高效，但是如果随机选择的线程发现自己仍然不能运行，它就会再次阻塞。如果没有其他线程再次调用signal，系统就会进入死锁。
+
+```java
+package synch;
+public class Bank{
+    accounts = new double[n];
+    Array.fill(accounts, initialBalance);
+    bankLock = new ReentrantLock();
+    sufficientFunds = bankLock.newCondotion();
+
+    public void transfer(int from, int io, double amount) throws InterruptedException{
+         bankLock.lock();
+    try{
+        while(accounts[from] < amount){
+            suffocoentFunds.await();
+        }
+             System.out.print(Thread.currentThread());
+             accounts[from] -= amount;
+             System.out.printf("%10.2f from %d to %d", amount, from, to);
+             accounts[to] += amount;
+             System.out.printf("Total Balance: %10.2f%n", getTotalBalance());
+             sufficientFunds.signalAll();
+    }
+    finally{
+        bankLock.unlock();
+    }
+}
+
+    
+public double getTotalBalance(){
+    bankLock.lock();
+    try{
+        double sum = 0;
+        for(double a : accounts){
+            sum += a;
+        }
+        return sum;
+    }
+    finally{
+        bankLock.unlock();
+    }
+}
+public int size(){
+    return accounts.length;
+}
+}
+```
+
+#### 12.4.5.synchronized关键字
+
+前面我们已经了解如何使用Lock和Condition对象。先对锁和条件的要点做一个总结。
+
+1.锁用来保护代码片段，一次只能有一个线程执行被保护的代码。
+
+2.锁可以管理试图进入被保护代码的线程。
+
+3.一个锁可以有一个或多个相关联的条件对象。
+
+4.每个条件对象管理那些已经进入被保护代码段但还不能运行的情况。
+
+Lock和Condition接口运行程序员充分控制锁定。不过大多数情况下，并不需要那样控制，完全可以使用java语言内置的一种机制。从1.0版本开始，java中的每一个对象都有一个内部锁。如果一个方法声明时有synchronzied关键字，那么对象的锁将保护整个办法。也就是说，要调用这个方法，线程必须获得内部锁。换句话说
+
+```java
+public synchronized void method(){
+    -------
+}
+```
+
+等价于
+
+```java
+public void method(){
+    this.intrinsicLock.lock();
+    try{
+        ---------
+    }
+    finally{
+        this.intrinsicLocl.unlock();
+    }
+}
+```
+
+内部锁和条件存在一些限制。
+
+1.不能中断一个正在试图尝试获得锁的线程。
+
+2.不能指定尝试获得锁时的超时时间。
+
+3.每个锁仅有一个条件可能是不够的。
+
+在代码中应该使用哪一种做法？Lock和Condition对象还是同步方法？下面是一些建议。
+
+1.最好既不使用Lock/Conditon也不使用synchronized关键字。在许多情况下，可以使用java.until.concurrent包中的某些机制，它会为你处理所有的锁定。
+
+2.如果synchronized关键字适合你的程序，那么尽量使用这种做法，这样可以减少编写的代码量，还能减少出错的概率。
+
+3.如果特别需要Lock/Condition结构提供的额外能力，则使用Lock/Condition。
+
+```java
+package synch2;
+import java.util.*;
+public calss Bank{
+   
+    priveate final double[] accounts;
+    
+    public Bank(int n, double initialBalance){
+        accounts = new double[n];
+        Arrays.fill(accounts, initialBalance);
+    }
+    
+    public synchroized void transfer(int from, int io, double amount) throws InterruptedException{
+        while(accounts[from] < amount){
+            suffocoentFunds.await();
+        }
+             System.out.print(Thread.currentThread());
+             accounts[from] -= amount;
+             System.out.printf("%10.2f from %d to %d", amount, from, to);
+             accounts[to] += amount;
+             System.out.printf("Total Balance: %10.2f%n", getTotalBalance());
+             notifyAll();
+    }
+    
+    public synchronized double getTotalBalance(){
+        double sum = 0;
+        for(double a : accounts){
+            sum += a;
+        }
+        return sum;
+   }
+   
+    public int size(){
+        return accounts.length;
+    }
+}
+```
+
+#### 12.4.6.同步块
+
+每一个java对象都有一个锁。线程可以通过调用同步方法获得锁。还有另一种机制可以获得锁：即进入一个同步块。当线程进入如下形式的块时。
+
+```java
+synchronized(obj){
+    -----}
+```
+
+有时，我们还会发现一些专用锁,在这里创建lock对象指示为了使用每个java对象拥有的锁。
+
+```java
+synchronized(lock){
+    accounts[froms] -= amount;
+    accounts[to] += amount;
+}
+System.out.println(......);
+}
+}
+```
+
+#### 12.4.8.volatile字段
+
+如果声明一个字段为volatile，那么编译器和虚拟机就知道该字段可能被另一个线程并发并更新。
+
+例如，假设一个对象有一个boolean标记done，它的值由一个线程设置，而由另一个线程查询，如同我们讨论过的那样，你可以使用锁
+
+```java
+private boolean done;
+public synchronized boolean isDone(){return done;}
+public synchronized void setDone(){done =true;}
+```
+
+或者使用内部对象锁不是个好注意。如果另一个线程已经对该对象加锁，isDone和serDone方法可能会阻塞。如果这是个问题，可以只为这个变量使用一个单独的锁。但是这回很麻烦，在这种情况下，将字段声明为volatile就很合适。
+
+```java
+private volatile boolean done;
+public boolean isDone(){retrun done;}
+public void serDone(){done = true;}
+```
+
+编译器会插入适当的代码，以确保如果一个线程对done变量做出了修改，这个修改对读取这个变量的所有其他线程都可见。
+
+
+
+
+
+
+
+
+
+
+

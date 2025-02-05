@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "b55f81fb9c5785cf",
+        "id": "e7dcce0976c264bc",
         "type": "tabs",
         "children": [
           {
-            "id": "8acd50be118b264d",
+            "id": "f4cca2218981f6c2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "101_git/001_git操作命令.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "001_git操作命令"
+              "title": "新标签页"
             }
           }
         ]
@@ -171,26 +167,38 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8acd50be118b264d",
+  "active": "bb92cf1847c27261",
   "lastOpenFiles": [
+    "1003_linux/img/linux06.png",
+    "1003_linux/img/linux05.png",
+    "1003_linux/img/linux04.png",
+    "1003_linux/img/linux03.png",
+    "1003_linux/img/linux02.png",
+    "1003_linux/img/linux01.png",
     "README.md",
+    "1003_linux/img/linux07.png",
+    "1003_linux/img",
+    "1003_linux/linux.txt",
+    "1003_linux",
+    "1001_git/001_git操作命令.md",
+    "003_Spring",
+    "002_Sql",
+    "001_Java",
     "Obsidian Vault.zip",
-    "101_git/000_git简介.md",
-    "101_git/002_git连接失败.md",
-    "103_mybatis/插入更新语句.md",
-    "103_mybatis/mybatis笔记.md",
-    "001_网络教程/IO流/IO流教程笔记/IO流详解.md",
-    "001_网络教程/003_JavaWeb/JavaWeb.md",
-    "103_mybatis",
-    "001_网络教程/000_JDBC/JBDC教程笔记/JDBC使用详解.md",
-    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第一章 微服务介绍.md",
+    "1001_git/000_git简介.md",
+    "1001_git/002_git连接失败.md",
+    "004_mybatis/插入更新语句.md",
+    "004_mybatis/mybatis笔记.md",
+    "001_Java/IO流/IO流教程笔记/IO流详解.md",
+    "001_Java/003_JavaWeb/JavaWeb.md",
+    "004_mybatis",
+    "001_Java/000_JDBC/JBDC教程笔记/JDBC使用详解.md",
+    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第一章 微服务介绍.md",
     "104",
-    "001_网络教程/000_JDBC",
-    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第八章 Zuul服务网关.md",
-    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第二章 Eureka注册中心.md",
-    "001_网络教程/002_spring cloud/spring Cloud教程文件/SC 第五章 Hystrix熔断器.md",
-    "001_网络教程",
-    "101_git/001_git操作命令.md",
+    "001_Java/000_JDBC",
+    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第八章 Zuul服务网关.md",
+    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第二章 Eureka注册中心.md",
+    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第五章 Hystrix熔断器.md",
     "000_书籍/105_Spring实战4/ssm整合文档.md",
     "000_书籍/101_java核心技术/012_java核心技术第12章.md",
     "000_书籍/101_java核心技术/003_java核心技术第3章.md",
@@ -202,15 +210,9 @@
     "000_书籍/102_MYSQL必知必会/026_MySQL必知必会21-26章.md",
     "000_书籍/101_java核心技术/005_java核心技术第5章.md",
     "000_书籍/101_java核心技术/006_java核心技术第6章.md",
-    "000_书籍/101_java核心技术/099_代码相关",
-    "501_前端笔记/JS.md",
-    "501_前端笔记/HTML和CSS.md",
-    "501_前端笔记/Vue/img/Vue03.png",
-    "501_前端笔记/Vue/img/Vue02.png",
-    "501_前端笔记/Vue/img/Vue01.png",
-    "000_书籍",
-    "102_github",
-    "101_git",
-    "git操作"
+    "2001_前端笔记/JS.md",
+    "2001_前端笔记/Vue/img/Vue03.png",
+    "2001_前端笔记/Vue/img/Vue02.png",
+    "2001_前端笔记/Vue/img/Vue01.png"
   ]
 }

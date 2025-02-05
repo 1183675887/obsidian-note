@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "e7dcce0976c264bc",
+        "id": "d04f8b8ec4f17956",
         "type": "tabs",
         "children": [
           {
-            "id": "f4cca2218981f6c2",
+            "id": "cae9e9671e07212b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "000_书籍/001_java核心技术/003_java核心技术第3章.md",
+                "file": "000_书籍/103_Spring实战4/spring实战4第2章.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "003_java核心技术第3章"
+              "title": "spring实战4第2章"
             }
           }
         ]
@@ -137,28 +137,18 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "001_git/001_git操作命令.md"
+                "file": "000_书籍/103_Spring实战4/spring实战4第2章.md"
               },
               "icon": "lucide-list",
-              "title": "001_git操作命令 的大纲"
-            }
-          },
-          {
-            "id": "7dd4dacada6e0e7e",
-            "type": "leaf",
-            "state": {
-              "type": "git-view",
-              "state": {},
-              "icon": "git-pull-request",
-              "title": "Source Control"
+              "title": "spring实战4第2章 的大纲"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 333.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -171,25 +161,46 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7dd4dacada6e0e7e",
+  "active": "cae9e9671e07212b",
   "lastOpenFiles": [
+    "1002_github/002_github如何访问.md",
+    "1002_github/001_github如何当图床.md",
+    "4001_工作培训/001_前端开发流程.md",
+    "1004_obsidian",
     "README.md",
-    "000_书籍/002_MYSQL必知必会/001_MySQL必知必会1-3章.md",
-    "000_书籍/105_Spring实战4/ssm整合文档.md",
-    "000_书籍/105_Spring实战4/spring实战4第9章.md",
-    "000_书籍/105_Spring实战4/spring实战4第6章.md",
-    "000_书籍/105_Spring实战4/spring实战4第5章.md",
-    "000_书籍/105_Spring实战4/spring实战4第4章.md",
-    "000_书籍/105_Spring实战4/spring实战4第3章.md",
-    "000_书籍/105_Spring实战4/spring实战4第2章.md",
-    "000_书籍/105_Spring实战4/spring实战4第14章.md",
-    "000_书籍/105_Spring实战4/spring实战4第15章.md",
-    "000_书籍/105_Spring实战4/spring实战4第13章.md",
-    "000_书籍/105_Spring实战4/spring实战4第12章.md",
-    "000_书籍/105_Spring实战4/spring实战4第10章.md",
-    "000_书籍/105_Spring实战4/spring实战4第11章.md",
-    "000_书籍/105_Spring实战4",
+    "2001_HTML/001_HTML基本知识.md",
+    "1001_git/000_git简介.md",
+    "1001_git/002_git连接失败.md",
     "1001_git/001_git操作命令.md",
+    "1001_git/img/git02.png",
+    "1001_git/img/git01.png",
+    "2005_VUE/img/Vue01.png",
+    "2005_VUE/001_vue2.md",
+    "2005_VUE/002_vue3.md",
+    "2002_CSS/002_CSS基本知识.md",
+    "000_书籍/101_java核心技术/003_java核心技术第3章.md",
+    "2005_VUE",
+    "2004_AJAX",
+    "2003_JS",
+    "2002_CSS",
+    "2001_HTML",
+    "4001_工作培训",
+    "3001_工作笔记",
+    "000_书籍/102_MYSQL必知必会/001_MySQL必知必会1-3章.md",
+    "000_书籍/103_Spring实战4/ssm整合文档.md",
+    "000_书籍/103_Spring实战4/spring实战4第9章.md",
+    "000_书籍/103_Spring实战4/spring实战4第6章.md",
+    "000_书籍/103_Spring实战4/spring实战4第5章.md",
+    "000_书籍/103_Spring实战4/spring实战4第4章.md",
+    "000_书籍/103_Spring实战4/spring实战4第3章.md",
+    "000_书籍/103_Spring实战4/spring实战4第2章.md",
+    "000_书籍/103_Spring实战4/spring实战4第14章.md",
+    "000_书籍/103_Spring实战4/spring实战4第15章.md",
+    "000_书籍/103_Spring实战4/spring实战4第13章.md",
+    "000_书籍/103_Spring实战4/spring实战4第12章.md",
+    "000_书籍/103_Spring实战4/spring实战4第10章.md",
+    "000_书籍/103_Spring实战4/spring实战4第11章.md",
+    "000_书籍/103_Spring实战4",
     "1003_linux/img/linux07.png",
     "1003_linux/img/linux06.png",
     "1003_linux/img/linux05.png",
@@ -197,27 +208,6 @@
     "1003_linux/img/linux03.png",
     "1003_linux/img/linux02.png",
     "1003_linux/img/linux01.png",
-    "1003_linux/img",
-    "1003_linux/linux.txt",
-    "1003_linux",
-    "003_Spring",
-    "002_Sql",
-    "001_Java",
-    "Obsidian Vault.zip",
-    "1001_git/000_git简介.md",
-    "1001_git/002_git连接失败.md",
-    "004_mybatis/插入更新语句.md",
-    "004_mybatis/mybatis笔记.md",
-    "001_Java/IO流/IO流教程笔记/IO流详解.md",
-    "001_Java/003_JavaWeb/JavaWeb.md",
-    "004_mybatis",
-    "001_Java/000_JDBC/JBDC教程笔记/JDBC使用详解.md",
-    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第一章 微服务介绍.md",
-    "104",
-    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第八章 Zuul服务网关.md",
-    "003_Spring/002_spring cloud/spring Cloud教程文件/SC 第二章 Eureka注册中心.md",
-    "2001_前端笔记/Vue/img/Vue03.png",
-    "2001_前端笔记/Vue/img/Vue02.png",
-    "2001_前端笔记/Vue/img/Vue01.png"
+    "1003_linux/img"
   ]
 }

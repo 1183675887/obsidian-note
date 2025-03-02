@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "d04f8b8ec4f17956",
+        "id": "380d1ed37f4e41e7",
         "type": "tabs",
         "children": [
           {
-            "id": "cae9e9671e07212b",
+            "id": "5fb28b00343fd3e4",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "1001_git/001_git操作命令.md",
+                "file": "1001_git(待修改)/001_git操作命令.md",
                 "mode": "source",
                 "source": false
               },
@@ -77,7 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 290.5
   },
   "right": {
     "id": "5f0910f4a409e318",
@@ -137,18 +137,28 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "1001_git/001_git操作命令.md"
+                "file": "1001_git(待修改)/001_git操作命令.md"
               },
               "icon": "lucide-list",
               "title": "001_git操作命令 的大纲"
             }
+          },
+          {
+            "id": "a583973037ffb36f",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 333.5
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -161,53 +171,53 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "cae9e9671e07212b",
+  "active": "5fb28b00343fd3e4",
   "lastOpenFiles": [
-    "000_书籍/101_java核心技术I/012_java核心技术第12章.md",
-    "000_书籍/101_java核心技术I/006_java核心技术第6章.md",
-    "000_书籍/101_java核心技术I/005_java核心技术第5章.md",
-    "000_书籍/101_java核心技术I/004_java核心技术第4章.md",
-    "000_书籍/101_java核心技术I/003_java核心技术第3章.md",
-    "1001_git/001_git操作命令.md",
-    "000_书籍/103_Spring实战4/spring实战4第2章.md",
-    "1002_github/002_github如何访问.md",
-    "1002_github/001_github如何当图床.md",
-    "4001_工作培训/001_前端开发流程.md",
-    "1004_obsidian",
+    "1001_git(待修改)/000_git简介.md",
+    "000_书籍/103_Spring实战4(待修改)/spring实战4第3章.md",
+    "2002_CSS(待修改)/002_CSS基本知识.md",
+    "2002_CSS(待修改)",
+    "000_书籍/102_MYSQL必知必会(待修改)/001_MySQL必知必会1-3章.md",
+    "000_书籍/001_Effective Java/001_第1条：用静态工厂方法代替构造器.md",
+    "000_书籍/103_Spring实战4(待修改)/spring实战4第2章.md",
+    "4001_工作培训(待修改)/001_前端开发流程.md",
     "README.md",
-    "2001_HTML/001_HTML基本知识.md",
-    "1001_git/000_git简介.md",
-    "1001_git/002_git连接失败.md",
-    "1001_git/img/git02.png",
-    "1001_git/img/git01.png",
-    "2005_VUE/img/Vue01.png",
-    "2005_VUE/001_vue2.md",
-    "2005_VUE/002_vue3.md",
-    "2002_CSS/002_CSS基本知识.md",
-    "2005_VUE",
-    "2004_AJAX",
-    "2003_JS",
-    "2002_CSS",
-    "2001_HTML",
-    "4001_工作培训",
-    "3001_工作笔记",
-    "000_书籍/102_MYSQL必知必会/001_MySQL必知必会1-3章.md",
-    "000_书籍/103_Spring实战4/ssm整合文档.md",
-    "000_书籍/103_Spring实战4/spring实战4第9章.md",
-    "000_书籍/103_Spring实战4/spring实战4第6章.md",
-    "000_书籍/103_Spring实战4/spring实战4第5章.md",
-    "000_书籍/103_Spring实战4/spring实战4第4章.md",
-    "000_书籍/103_Spring实战4/spring实战4第3章.md",
-    "000_书籍/103_Spring实战4/spring实战4第14章.md",
-    "000_书籍/103_Spring实战4/spring实战4第15章.md",
-    "000_书籍/103_Spring实战4",
-    "1003_linux/img/linux07.png",
-    "1003_linux/img/linux06.png",
-    "1003_linux/img/linux05.png",
-    "1003_linux/img/linux04.png",
-    "1003_linux/img/linux03.png",
-    "1003_linux/img/linux02.png",
-    "1003_linux/img/linux01.png",
-    "1003_linux/img"
+    "003_Spring(待修改)/002_spring cloud/spring Cloud教程文件/SC 第二章 Eureka注册中心.md",
+    "003_Spring(待修改)/002_spring cloud/spring Cloud教程文件/SC 第一章 微服务介绍.md",
+    "003_Spring(待修改)/002_spring cloud/spring Cloud教程文件/SC 第五章 Hystrix熔断器.md",
+    "2005_VUE(待修改)/002_vue3.md",
+    "2005_VUE(待修改)/001_vue2.md",
+    "1001_git(待修改)/001_git操作命令.md",
+    "1001_git(待修改)/002_git连接失败.md",
+    "000_书籍/101_java核心技术I(正在修改)/004_java核心技术第4章.md",
+    "000_书籍/101_java核心技术I(正在修改)/003_java核心技术第3章.md",
+    "000_书籍/101_java核心技术I(正在修改)/006_java核心技术第6章.md",
+    "000_书籍/101_java核心技术I(正在修改)/005_java核心技术第5章.md",
+    "000_书籍/101_java核心技术I(正在修改)/012_java核心技术第12章.md",
+    "000_书籍/102_MYSQL必知必会(待修改)/026_MySQL必知必会21-26章.md",
+    "000_书籍/102_MYSQL必知必会(待修改)/020_MySQL必知必会15-20章.md",
+    "000_书籍/102_MYSQL必知必会(待修改)/014_MySQL必知必会10-14章.md",
+    "000_书籍/102_MYSQL必知必会(待修改)/009_MySQL必知必会4-9章.md",
+    "000_书籍/103_Spring实战4(待修改)/ssm整合文档.md",
+    "000_书籍/103_Spring实战4(待修改)/spring实战4第15章.md",
+    "1004_obsidian(待修改)",
+    "1001_git(待修改)/img/git02.png",
+    "1001_git(待修改)/img/git01.png",
+    "2005_VUE(待修改)/img/Vue01.png",
+    "2005_VUE(待修改)",
+    "2004_AJAX(待修改)",
+    "2003_JS(待修改)",
+    "2001_HTML(待修改)",
+    "4001_工作培训(待修改)",
+    "3001_工作笔记(待修改)",
+    "000_书籍/103_Spring实战4(待修改)",
+    "1003_linux(待修改)/img/linux07.png",
+    "1003_linux(待修改)/img/linux06.png",
+    "1003_linux(待修改)/img/linux05.png",
+    "1003_linux(待修改)/img/linux04.png",
+    "1003_linux(待修改)/img/linux03.png",
+    "1003_linux(待修改)/img/linux02.png",
+    "1003_linux(待修改)/img/linux01.png",
+    "1003_linux(待修改)/img"
   ]
 }

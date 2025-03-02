@@ -1,7 +1,9 @@
 ---
 title: spring实战4第2章
 date: 2020-07-04 18:12:20
-tags: spring
+tags:
+  - spring
+  - spring实战4
 ---
 
 ## 第二章，装配Bean
